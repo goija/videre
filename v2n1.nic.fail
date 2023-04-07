@@ -1,0 +1,10 @@
+{
+    "Passive": {
+        "query": "0x00000000000000000000ffffa1e80b38",
+        "records": []
+    },
+    "RDNS": [
+        "v2n1.nic.fail"
+    ],
+    "total_rows": 1
+}
