@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // KEY VAULT MATRIX</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.8);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Header Styling */
+        .header-status {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--vortex-border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* Key List Panel */
+        .key-panel {
+            flex: 1;
+            border: 1px solid var(--vortex-border);
+            background: rgba(0, 229, 255, 0.02);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .key-list {
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .key-item {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .key-item:hover, .key-item.active {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--vortex-cyan);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+
+        .key-hash {
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .key-status {
+            font-size: 0.7rem;
+            color: var(--vortex-magenta);
+        }
+
+        /* Terminal Panel */
+        .terminal-panel {
+            flex: 1;
+            border: 1px solid var(--vortex-magenta);
+            background: rgba(255, 0, 255, 0.02);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(255, 0, 255, 0.05);
+        }
+
+        .terminal-header {
+            background: rgba(255, 0, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            color: var(--vortex-magenta);
+            border-bottom: 1px solid var(--vortex-magenta);
+        }
+
+        .terminal-output {
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+            white-space: pre-wrap;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Scrollbar customization */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vortex-cyan); }
+
+        .log-time { color: #555; margin-right: 10px; }
+        .log-info { color: #fff; }
+        .log-success { color: var(--vortex-success); font-weight: bold; }
+        .log-warning { color: var(--vortex-magenta); font-weight: bold; }
+        .log-error { color: var(--vortex-alert); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header-status">
+        <span>MODULE: IDENTITY_TOKEN_VAULT</span>
+        <span>PROTOCOL: BASEGLOT1</span>
+        <span>STORED KEYS: <span id="keyCount">0</span></span>
+    </div>
+
+    <div class="main-container">
+        <div class="key-panel">
+            <div class="panel-header">
+                <span>SECURE HASH MATRIX</span>
+                <span>STATUS: ENCRYPTED</span>
+            </div>
+            <div class="key-list" id="keyList">
+                </div>
+        </div>
+
+        <div class="terminal-panel">
+            <div class="terminal-header">
+                > DECRYPTION & VALIDATION TERMINAL
+            </div>
+            <div class="terminal-output" id="terminal">
+<span class="log-time">[SYS]</span> VORTEX OMNI-BRIDGE v26.5 INITIALIZED.
+<span class="log-time">[SYS]</span> WACHTEND OP SELECTIE VAN CRYPTO-KEY VOOR ANALYSE...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // De verstrekte lijst met sleutels
+        const keys = [
+            "OefcMxcunkm72Po71vVtX8zUN57vQtAC",
+            "PSKINdQe1GyxGgecYz2191H2JoS9qvgD",
+            "pHHlgpFt8Ka3Stb5UlTxcaEwciOeF2QM",
+            "61TvA2dNwxNxmWziZxKzR5aO9tFD00Nj",
+            "xTbXXOSBr0R65OcClImSwzadExoXU4tc",
+            "EJV3A4Mka2wPs7P8VBCO6xcpRe27iNJu",
+            "mEuInz8UH1ixLGJq4oQhEiJORERVG5xc",
+            "lkY0ng0XMo29zEhzyw3ibQfeEBxghwPF",
+            "syeCnFndQ8TE4qAGvhm9nZLBZOBgoLKd",
+            "7TeyFZ8oyLulHwYUOcSPzZ5w3cLYib61",
+            "v4YpsPUJ3wjDxEqywwu6aF5OZKWj8kik",
+            "dTNGRiwYNozXIDRf5DWyGNbkdiS5m3JK",
+            "kdnzf4fsYWQmGajRDn3hB0RElbUlIaqu",
+            "boYedPn8iDWi6GDSO6h2kz72VLt6bZ3S",
+            "FQNAMUdkeqXqVOdXsTLYeatFSpZSktdb",
+            "OygcaGSSq46Lg5fZiADAuFxl4OBbn7zm",
+            "XAbsu1Ruj5uhTNcxGdbGNgrh9WuMS1B6",
+            "nkGd8uVE4oryfUVvioprswdKGmA5InzZ",
+            "XYdjHDeJM36AjDfU1feBsyMJIj8XxGzD",
+            "EBeU0lGqtIO6yCxVFCWC4nUVbvovtjo5"
+        ];
+
+        const keyListEl = document.getElementById('keyList');
+        const terminalEl = document.getElementById('terminal');
+        document.getElementById('keyCount').innerText = keys.length;
+
+        // Render de sleutels in het linkerpaneel
+        keys.forEach((key, index) => {
+            const item = document.createElement('div');
+            item.className = 'key-item';
+            item.innerHTML = `
+                <span class="key-hash">${key.substring(0, 6)}...${key.substring(key.length - 6)}</span>
+                <span class="key-status">STANDBY</span>
+            `;
+            
+            item.addEventListener('click', () => {
+                // Verwijder active class van alle items
+                document.querySelectorAll('.key-item').forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Start analyse in terminal
+                analyzeKey(key, index);
+            });
+            
+            keyListEl.appendChild(item);
+        });
+
+        function getTimestamp() {
+            const now = new Date();
+            return `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+        }
+
+        function log(message, type = 'info') {
+            const time = getTimestamp();
+            let cssClass = 'log-info';
+            if(type === 'success') cssClass = 'log-success';
+            if(type === 'warning') cssClass = 'log-warning';
+            if(type === 'error') cssClass = 'log-error';
+
+            terminalEl.innerHTML += `\n<span class="log-time">${time}</span> <span class="${cssClass}">${message}</span>`;
+            terminalEl.scrollTop = terminalEl.scrollHeight;
+        }
+
+        async function analyzeKey(key, index) {
+            terminalEl.innerHTML += '\n---------------------------------------------------';
+            log(`INITIATING TARGET KEY: ${key}`, 'warning');
+            
+            // Simuleer een netwerk/decryptie vertraging
+            await sleep(600);
+            log(`Controleren van syntaxis... Base62/Base64 structuur herkend.`);
+            
+            await sleep(800);
+            log(`Toepassen van AES-256 Decryptie protocollen...`);
+            
+            await sleep(1000);
+            
+            // Willekeurige status generatie voor het roleplay-effect
+            const statuses = ['AUTHORIZED', 'VALIDATED', 'ACCESS_GRANTED', 'UNKNOWN_ENTITY', 'RESTRICTED'];
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            if (randomStatus === 'RESTRICTED' || randomStatus === 'UNKNOWN_ENTITY') {
+                log(`[!] FOUT: SLEUTEL GEWEIGERD OF VERLOPEN.`, 'error');
+                log(`STATUS CODE: ${randomStatus}`, 'error');
+            } else {
+                log(`[+] DECRYPTIE SUCCESVOL. INTEGRITEIT: 100%`, 'success');
+                log(`STATUS CODE: ${randomStatus} - CLEARANCE LEVEL ${Math.floor(Math.random() * 5) + 1}`, 'success');
+                log(`M2M Handshake token geregistreerd in slot #${index + 1}`);
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

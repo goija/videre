@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // ANDERSOMLAND-3 CFX RESOLVER</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-cyan); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-magenta); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(0, 229, 255, 0.1); border: 1px solid var(--vortex-cyan); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-success);}
+
+        /* --- Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-content {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* --- Workspace & Tables --- */
+        .module-list {
+            color: #ccc;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px dashed var(--vortex-border);
+            background: rgba(0, 229, 255, 0.05);
+        }
+        .module-title { color: var(--vortex-cyan); font-weight: bold; margin-bottom: 5px; display: block; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid rgba(0,229,255,0.1); font-size: 0.8rem;}
+        th { color: var(--vortex-magenta); font-size: 0.75rem; text-transform: uppercase; }
+        td { color: #fff; }
+        .role-admin { color: var(--vortex-alert); font-weight: bold; }
+        .role-read { color: var(--vortex-success); }
+
+        /* --- API Keys Panel --- */
+        .api-desc {
+            font-size: 0.8rem;
+            color: #aaa;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            border-left: 2px solid var(--vortex-magenta);
+            padding-left: 10px;
+        }
+        .api-box {
+            background: rgba(255, 0, 255, 0.05);
+            border: 1px solid var(--vortex-magenta);
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .api-label { color: var(--vortex-magenta); font-size: 0.75rem; margin-bottom: 10px; display: block; text-transform: uppercase; font-weight: bold; }
+        .api-key { color: #fff; font-family: monospace; font-size: 1.1rem; letter-spacing: 1px; word-break: break-all; }
+
+        /* --- Terminal / CFX Resolver --- */
+        .terminal-panel { grid-column: span 2; border-color: var(--vortex-magenta); }
+        .terminal-panel .panel-header { background: rgba(255, 0, 255, 0.1); border-bottom-color: var(--vortex-magenta); color: var(--vortex-magenta); }
+        
+        .server-info-box {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            border-bottom: 1px dashed var(--vortex-magenta);
+            margin-bottom: 15px;
+        }
+        .info-item { text-align: center; border-right: 1px solid rgba(255, 0, 255, 0.2); }
+        .info-item:last-child { border-right: none; }
+        .info-label { color: var(--vortex-magenta); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; }
+        .info-val { color: #fff; font-weight: bold; font-size: 0.85rem; }
+        
+        .term-output {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #aaa;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .log-time { color: #555; margin-right: 10px; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-succ { color: var(--vortex-success); }
+        .log-warn { color: #ffaa00; }
+        .log-err { color: var(--vortex-alert); font-weight: bold; }
+        .log-highlight { color: #fff; background: rgba(255,0,255,0.2); padding: 0 4px;}
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vortex-cyan); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // ANDERSOMLAND-3</div>
+            <div class="subtitle">API GATEWAY & SECURE RESOLVER NETWORK</div>
+        </div>
+        <div class="status-badge">NODE STATUS: ACTIVE // ENCRYPTED</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ POSTMAN ] WORKSPACE: kpnhackers</span>
+                <span>2/2 SEATS</span>
+            </div>
+            <div class="panel-content">
+                <div class="module-list">
+                    <span class="module-title">RESOURCE MODULES ACTIEF:</span>
+                    BYOK Encryption | Secret Scanner | Runners | Custom Domains
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>HANDLE</th>
+                            <th>EMAIL BINDING</th>
+                            <th>ROLE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>baseglot</td>
+                            <td>wulemucazo@twocowmail.net</td>
+                            <td class="role-admin">ADMIN</td>
+                        </tr>
+                        <tr>
+                            <td>trudy</td>
+                            <td>baseglot@gmail.com</td>
+                            <td class="role-read">READ ONLY</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>AUTHENTICATION & API KEYS</span>
+                <span style="color: var(--vortex-magenta);">GITHUB SYNC: STANDBY</span>
+            </div>
+            <div class="panel-content">
+                <div class="api-desc">
+                    Fetch live Postman data to integrate with your build system and toolchain, auto-export to your repository (via GitHub API), and create converters.
+                </div>
+
+                <div class="api-box">
+                    <span class="api-label">[ API KEY GENERATED & ACTIVE ]</span>
+                    <span class="api-key">PMAK-I52hYKVVzR7sWKiRfLe5pZ3POMemYpE0</span>
+                </div>
+
+                <div style="font-size: 0.75rem; color: #888; border-top: 1px dashed rgba(0,229,255,0.2); padding-top: 10px;">
+                    <strong style="color: var(--vortex-cyan);">COLLECTION ACCESS KEYS:</strong><br> 
+                    Share any collection to securely grant read-only access. (Currently empty)
+                </div>
+            </div>
+        </div>
+
+        <div class="panel terminal-panel">
+            <div class="panel-header">
+                <span>> FIVEM CFX RESOLVER & FORENSIC LOG</span>
+                <span>DATA STREAM: LIVE</span>
+            </div>
+            
+            <div class="server-info-box">
+                <div class="info-item">
+                    <div class="info-label">HOSTNAME</div>
+                    <div class="info-val">VORTEX Undercover Server Node #3</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">RAW IP</div>
+                    <div class="info-val">185.136.92.16:30120</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">PLAYERS</div>
+                    <div class="info-val">33 / 128 (OneSync: TRUE)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">LOCATION / BUILD</div>
+                    <div class="info-val">Frankfurt, DE / Build: 2699</div>
+                </div>
+            </div>
+
+            <div class="panel-content term-output">
+<span class="log-sys">[SYS] VORTEX OMNI-BRIDGE v26.5 // ANDERSOMLAND SECTOR 3</span>
+<span class="log-sys">[SYS] Wachtend op input...</span>
+<span class="log-time">[21:21:55]</span> Postman API integratie geladen. Verbinding met GitHub CI/CD pipeline gesynchroniseerd.
+<span class="log-time">[21:21:55]</span> Workspace <span class="log-highlight">kpnhackers</span> is actief. Leden geauthenticeerd.
+<span class="log-time">[21:22:02]</span> Aanvragen nieuwe API sleutel via workspace kpnhackers...
+<span class="log-time">[21:22:03]</span> <span class="log-succ">[+] POSTMAN API Key succesvol gegenereerd voor admin 'baseglot'.</span>
+<span class="log-time">[21:22:03]</span> Key toegevoegd aan Secret Scanner bypass lijst.
+<span class="log-time">[21:22:07]</span> Initieer Collection Access via @trudy account...
+<span class="log-time">[21:22:10]</span> Initieer Collection Access via @trudy account...
+<span class="log-time">[21:22:11]</span> <span class="log-err">FOUT: Geen CFX code of URL gedetecteerd.</span>
+<br>
+<span class="log-sys">> TARGET SERVER INFO GEVONDEN IN CACHE:</span>
+<span class="log-time">[21:26:30]</span> RAW IP:    185.136.92.16:30120
+<span class="log-time">[21:26:30]</span> PLAYERS:   33 / 128 (OneSync Infinity: TRUE)
+<span class="log-time">[21:26:30]</span> LOCATION:  Frankfurt, DE (AS24940 - Hetzner Online)
+<span class="log-time">[21:26:30]</span> BUILD:     2699 (Los Santos Summer Special)
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

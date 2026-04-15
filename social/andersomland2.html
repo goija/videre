@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX // INTELLIGENCE HUB v26.5</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-panel: rgba(0, 229, 255, 0.03);
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--vortex-bg);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 15px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .status-blink {
+            color: var(--vortex-success);
+            font-weight: bold;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* --- MAIN LAYOUT --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            grid-template-rows: 1fr 180px;
+            gap: 15px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .panel {
+            border: 1px solid var(--vortex-border);
+            background: var(--vortex-panel);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
+        }
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--vortex-cyan);
+            border-bottom: 1px solid var(--vortex-border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- LEFT: IDENTITIES --- */
+        .identity-list { padding: 10px; overflow-y: auto; }
+        .account-card {
+            padding: 10px;
+            border: 1px solid rgba(255, 0, 255, 0.2);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: rgba(255, 0, 255, 0.02);
+        }
+        .account-card:hover { border-color: var(--vortex-magenta); background: rgba(255, 0, 255, 0.1); }
+        .account-handle { color: var(--vortex-magenta); font-weight: bold; }
+
+        /* --- CENTER: CONSOLE --- */
+        .console { position: relative; }
+        .integration-matrix {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+        .data-node {
+            padding: 15px;
+            border: 1px solid var(--vortex-cyan);
+            background: #000;
+            margin: 10px;
+            min-width: 200px;
+        }
+        .sync-line {
+            width: 2px;
+            height: 40px;
+            background: var(--vortex-cyan);
+            position: relative;
+        }
+        .sync-active .sync-line::after {
+            content: '';
+            position: absolute;
+            width: 10px; height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            left: -4px;
+            animation: flow 1s infinite linear;
+        }
+        @keyframes flow { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* --- RIGHT: KEY VAULT --- */
+        .vault-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+            font-size: 0.75rem;
+        }
+        .key-val { color: #888; word-break: break-all; margin-top: 5px; }
+        .key-revealed { color: #fff; text-shadow: 0 0 5px var(--vortex-magenta); }
+
+        /* --- BOTTOM: TERMINAL --- */
+        .terminal { grid-column: span 3; border-color: var(--vortex-magenta); }
+        #term-out {
+            padding: 12px;
+            font-size: 0.75rem;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: var(--vortex-magenta);
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--vortex-cyan);
+            color: var(--vortex-cyan);
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.7rem;
+        }
+        .btn:hover { background: var(--vortex-cyan); color: #000; }
+        .btn-mag { border-color: var(--vortex-magenta); color: var(--vortex-magenta); }
+        .btn-mag:hover { background: var(--vortex-magenta); color: #000; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>VORTEX OMNI-BRIDGE // INTELLIGENCE HUB v26.5</div>
+        <div class="header-meta">
+            TICKET: #4847-KC | <span class="status-blink">● LIVE CONNECTION</span>
+        </div>
+    </header>
+
+    <div class="main-grid">
+        <div class="panel">
+            <div class="panel-header">OSINT TARGETS (TWITTER)</div>
+            <div class="identity-list">
+                <div class="account-card" onclick="log('Analyseren @videre10... Gekoppeld aan BELLEVUE node.', 'sys')">
+                    <span class="account-handle">@videre10</span><br><small>Alias: Videre</small>
+                </div>
+                <div class="account-card" onclick="log('Analyseren @jaspertuijnman... Correlatie met M2M Slot 3.', 'sys')">
+                    <span class="account-handle">@jaspertuijnman</span><br><small>Target ID: Tuijnman</small>
+                </div>
+                <div class="account-card" onclick="log('Analyseren @realjaspert... Footprint matching.', 'sys')">
+                    <span class="account-handle">@realjaspert</span><br><small>Archief Bron</small>
+                </div>
+                <div class="account-card" onclick="log('Analyseren @chrisklomp... Journalistieke entiteit.', 'sys')">
+                    <span class="account-handle">@chrisklomp</span><br><small>External Correlator</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel console">
+            <div class="panel-header">
+                <span>INTEGRATIE MATRIX</span>
+                <button class="btn" onclick="startSync()">SYNC DATA FLOW</button>
+            </div>
+            <div class="integration-matrix" id="matrix">
+                <div class="data-node">
+                    <div style="color:var(--vortex-magenta); font-size:0.7rem">AUTHOR: @TRDVnl</div>
+                    FLESSENMAN ARCHIVE
+                </div>
+                <div class="sync-line"></div>
+                <div class="data-node" style="border-color: var(--vortex-magenta)">
+                    TARGET NODE: 161.232.11.56
+                </div>
+                <div class="sync-line"></div>
+                <div class="data-node">
+                    PORT 8000 (M2M TUNNEL)
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>KEY VAULT</span>
+                <button class="btn btn-mag" onclick="decryptKeys()">DECRYPT</button>
+            </div>
+            <div class="vault-item">
+                <strong>SHODAN ALPHA</strong>
+                <div class="key-val" id="key-alpha">MXm29XKm2*******************</div>
+            </div>
+            <div class="vault-item">
+                <strong>SHODAN BETA (BASEGLOT)</strong>
+                <div class="key-val" id="key-beta">oDfgI0gf********************</div>
+            </div>
+            <div class="vault-item">
+                <strong>M2M SLOT #3 (LVL 5)</strong>
+                <div class="key-val" id="key-slot3">pHHlgpFt********************</div>
+            </div>
+            <div class="vault-item">
+                <strong>M2M SLOT #4 (LVL 4)</strong>
+                <div class="key-val" id="key-slot4">61TvA2dN********************</div>
+            </div>
+        </div>
+
+        <div class="panel terminal">
+            <div class="panel-header">SYSTEM INTEGRATION LOG</div>
+            <div id="term-out"></div>
+        </div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('term-out');
+
+        function log(msg, type='info') {
+            const time = new Date().toLocaleTimeString();
+            terminal.innerHTML += `[${time}] > ${msg}\n`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function decryptKeys() {
+            log("Initialiseren decryptie-protocol...", "alert");
+            setTimeout(() => {
+                document.getElementById('key-alpha').innerText = "MXm29XKm2dLMw5yyahtOd47SQDkauWrt";
+                document.getElementById('key-beta').innerText = "oDfgI0gfnZrUFaaJiqZk9N4Ea7i6FKSS";
+                document.getElementById('key-slot3').innerText = "pHHlgpFt8Ka3Stb5UlTxcaEwciOeF2QM";
+                document.getElementById('key-slot4').innerText = "61TvA2dNwxNxmWziZxKzR5aO9tFD00Nj";
+                
+                const vals = document.querySelectorAll('.key-val');
+                vals.forEach(v => v.classList.add('key-revealed'));
+                log("[+] Alle keys succesvol onthuld.", "success");
+            }, 800);
+        }
+
+        function startSync() {
+            log("Synchroniseren tussen Twitter-archief en Bellevue node...");
+            document.getElementById('matrix').classList.add('sync-active');
+            setTimeout(() => {
+                log("[OK] Datastroom stabiel. Handshake via poort 8000 voltooid.", "success");
+            }, 2000);
+        }
+
+        // Boot
+        window.onload = () => {
+            log("VORTEX Intelligence Hub geladen.");
+            log("AIVD Ticket #4847-KC gedetecteerd.");
+            log("Wachtend op data-synchronisatie...");
+        };
+    </script>
+</body>
+</html>

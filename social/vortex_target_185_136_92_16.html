@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // NODE DEEP SCAN: 185.136.92.16</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-alert);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-alert); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-magenta); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(255, 0, 60, 0.1); border: 1px solid var(--vortex-alert); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-alert); animation: pulse 2s infinite;}
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 60, 0); }
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+            overflow: hidden;
+        }
+        
+        .panel.alert-panel { border-color: var(--vortex-alert); }
+        .alert-panel .panel-header { background: rgba(255, 0, 60, 0.1); border-bottom-color: var(--vortex-alert); color: var(--vortex-alert);}
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-content { padding: 15px; overflow-y: auto; flex-grow: 1; }
+
+        /* Tables & Lists */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .data-table th, .data-table td { padding: 8px; border-bottom: 1px solid rgba(0,229,255,0.1); text-align: left; }
+        .data-table th { color: var(--vortex-magenta); text-transform: uppercase; font-size: 0.75rem; }
+        .data-table td { color: #fff; }
+        
+        .info-grid { display: grid; grid-template-columns: 120px 1fr; gap: 8px; font-size: 0.8rem; margin-bottom: 15px;}
+        .info-label { color: var(--vortex-cyan); font-weight: bold; }
+        .info-val { color: #ccc; }
+
+        .tag-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+        .tag { background: rgba(255,0,255,0.1); border: 1px solid var(--vortex-magenta); color: var(--vortex-magenta); padding: 2px 6px; font-size: 0.65rem; border-radius: 3px; }
+
+        /* Terminal Output */
+        .term-output { font-family: monospace; font-size: 0.75rem; color: #aaa; line-height: 1.5; white-space: pre-wrap; }
+        .log-time { color: #555; margin-right: 8px; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-warn { color: #ffaa00; font-weight: bold; }
+        .log-succ { color: var(--vortex-success); }
+        .log-err { color: var(--vortex-alert); font-weight: bold; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vortex-cyan); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // TACTICAL NODE SCAN</div>
+            <div class="subtitle">TARGET ACQUIRED: 185.136.92.16:30120</div>
+        </div>
+        <div class="status-badge">TARGET LOCKED // DEEP SCAN ACTIVE</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ NETWORK INTELLIGENCE ]</span>
+                <span style="color: var(--vortex-success);">ONLINE</span>
+            </div>
+            <div class="panel-content">
+                <div class="info-grid">
+                    <div class="info-label">IPv4 ADDRESS</div>
+                    <div class="info-val" style="color: #fff; font-weight: bold;">185.136.92.16</div>
+                    
+                    <div class="info-label">GAME PORT</div>
+                    <div class="info-val">30120 (UDP/TCP)</div>
+                    
+                    <div class="info-label">ISP / ASN</div>
+                    <div class="info-val">Hetzner Online GmbH (AS24940)</div>
+                    
+                    <div class="info-label">GEOLOCATION</div>
+                    <div class="info-val">Frankfurt am Main, Hessen, DE</div>
+                    
+                    <div class="info-label">COORDINATES</div>
+                    <div class="info-val">50.1109° N, 8.6821° E</div>
+                    
+                    <div class="info-label">LATENCY</div>
+                    <div class="info-val" style="color: var(--vortex-success);">14ms (VORTEX Core)</div>
+                </div>
+                
+                <div style="border-top: 1px dashed var(--vortex-cyan); padding-top: 10px; margin-top: 10px;">
+                    <strong style="color: var(--vortex-cyan); font-size: 0.8rem;">DDoS MITIGATION STATUS:</strong>
+                    <span style="color: #ffaa00; font-size: 0.8rem; margin-left: 10px;">Active (Path.net / OVH Vacuum)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ CFX SERVER CONFIGURATION ]</span>
+                <span>BUILD: 2699</span>
+            </div>
+            <div class="panel-content">
+                <div class="info-grid">
+                    <div class="info-label">HOSTNAME</div>
+                    <div class="info-val">VORTEX Undercover Server Node #3 | Custom Framework</div>
+                    
+                    <div class="info-label">ONESYNC</div>
+                    <div class="info-val" style="color: var(--vortex-success);">Infinity (Enabled)</div>
+                    
+                    <div class="info-label">ENFORCEMENT</div>
+                    <div class="info-val">GameBuild: 2699 (Los Santos Summer Special)</div>
+                    
+                    <div class="info-label">SCRIPTS</div>
+                    <div class="info-val">184 Active Resources</div>
+                    
+                    <div class="info-label">UPTIME</div>
+                    <div class="info-val">7 Days, 14 Hours, 22 Mins</div>
+                </div>
+
+                <div class="tag-list">
+                    <span class="tag">roleplay</span>
+                    <span class="tag">nederlands</span>
+                    <span class="tag">dutch</span>
+                    <span class="tag">custom-cars</span>
+                    <span class="tag">economy</span>
+                    <span class="tag">qbcore</span>
+                    <span class="tag">police</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" style="grid-column: 1;">
+            <div class="panel-header">
+                <span>[ LIVE CONNECTIONS ]</span>
+                <span>33 / 128 SLOTS</span>
+            </div>
+            <div class="panel-content" style="padding: 0;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>PLAYER ALIAS</th>
+                            <th>PING</th>
+                            <th>IDENTIFIER (TRUNCATED)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>baseglot</td><td style="color: var(--vortex-success);">12ms</td><td>steam:11000014a...</td></tr>
+                        <tr><td>4</td><td>trudy</td><td style="color: var(--vortex-success);">18ms</td><td>license:8f9a2b...</td></tr>
+                        <tr><td>12</td><td>JasperT_Real</td><td style="color: #ffaa00;">64ms</td><td>discord:382910...</td></tr>
+                        <tr><td>18</td><td>[LSPD] J. Doe</td><td style="color: var(--vortex-success);">22ms</td><td>steam:11000019b...</td></tr>
+                        <tr><td>24</td><td>Sill_Anonymous</td><td style="color: var(--vortex-alert);">145ms</td><td>fivem:293812...</td></tr>
+                        <tr><td>31</td><td>GhostRider_99</td><td style="color: var(--vortex-success);">28ms</td><td>license:3c4d5e...</td></tr>
+                        <tr><td>45</td><td>Admin_TRDVnl</td><td style="color: var(--vortex-success);">15ms</td><td>discord:192837...</td></tr>
+                        <tr><td colspan="4" style="text-align: center; color: #666; font-style: italic;">... 26 more connections hidden ...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel alert-panel" style="grid-column: 2;">
+            <div class="panel-header">
+                <span>> TARGET FORENSICS & VULN SCAN</span>
+            </div>
+            <div class="panel-content term-output">
+<span class="log-time">[21:35:01]</span> <span class="log-sys">INITIATING DIRECT PORT PROBE ON 185.136.92.16...</span>
+<span class="log-time">[21:35:02]</span> Resolving 185.136.92.16 via VORTEX Proxy Node...
+<span class="log-time">[21:35:02]</span> Port 30120 [TCP] is OPEN.
+<span class="log-time">[21:35:02]</span> Port 30120 [UDP] is OPEN.
+<span class="log-time">[21:35:03]</span> Port 30110 [TCP] is CLOSED. (TxAdmin not exposed on default port)
+<span class="log-time">[21:35:04]</span> Extracting server info.json... <span class="log-succ">[SUCCESS]</span>
+<span class="log-time">[21:35:05]</span> Extracting dynamic.json (Players)... <span class="log-succ">[SUCCESS]</span>
+<span class="log-time">[21:35:06]</span> <span class="log-warn">WARNING: High latency detected on connection ID #24 (145ms). Potential VPN usage.</span>
+<span class="log-time">[21:35:08]</span> Scanning exposed endpoints (/players.json, /info.json)...
+<span class="log-time">[21:35:09]</span> <span class="log-err">ALERT: /players.json endpoint is PUBLICLY ACCESSIBLE.</span>
+<span class="log-time">[21:35:09]</span> <span class="log-sys">Mapping identifiers to known VORTEX OSINT database profiles...</span>
+<span class="log-time">[21:35:12]</span> 3 matches found in internal database (baseglot, trudy, Admin_TRDVnl).
+<span class="log-time">[21:35:15]</span> <span class="log-succ">[+] DEEP SCAN COMPLETE. DATA APPENDED TO ARCHIVE.</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // ANDERSOMLAND-3 // API GATEWAY</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-panel: #0a0a0f;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.5rem; color: #fff; text-shadow: 0 0 8px var(--vortex-cyan); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-magenta); text-transform: uppercase; }
+        .status-badge { background: rgba(0, 229, 255, 0.1); border: 1px solid var(--vortex-cyan); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; }
+
+        /* --- Grid Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--vortex-panel);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .panel-content {
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+            font-size: 0.85rem;
+        }
+
+        /* --- Team Table --- */
+        .team-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .team-table th { text-align: left; color: var(--vortex-magenta); padding: 8px; border-bottom: 1px solid rgba(255,0,255,0.3); }
+        .team-table td { padding: 8px; border-bottom: 1px solid rgba(0,229,255,0.1); color: #ccc; }
+        .role-admin { color: var(--vortex-alert); font-weight: bold; }
+        .role-read { color: var(--vortex-success); }
+
+        /* --- API Vault --- */
+        .vault-box { border: 1px dashed var(--vortex-cyan); padding: 15px; text-align: center; margin-bottom: 15px; background: rgba(0,0,0,0.5); }
+        .btn { 
+            background: transparent; border: 1px solid var(--vortex-cyan); color: var(--vortex-cyan); 
+            padding: 8px 15px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; transition: 0.2s;
+        }
+        .btn:hover { background: var(--vortex-cyan); color: #000; }
+        .btn-mag { border-color: var(--vortex-magenta); color: var(--vortex-magenta); }
+        .btn-mag:hover { background: var(--vortex-magenta); color: #000; }
+        
+        .api-key-display { font-size: 1.1rem; color: #fff; letter-spacing: 2px; margin-top: 10px; display: none; word-break: break-all;}
+
+        /* --- CFX Resolver --- */
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .input-group input { 
+            flex-grow: 1; background: #000; border: 1px solid var(--vortex-border); color: #fff; 
+            padding: 10px; font-family: inherit; font-size: 0.9rem; outline: none;
+        }
+        .input-group input:focus { border-color: var(--vortex-cyan); }
+
+        /* --- Terminal --- */
+        .terminal-panel { grid-column: span 2; border-color: var(--vortex-magenta); }
+        .terminal-panel .panel-header { background: rgba(255, 0, 255, 0.1); color: var(--vortex-magenta); border-bottom-color: var(--vortex-magenta); }
+        .term-output { white-space: pre-wrap; color: #aaa; line-height: 1.5; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-warn { color: var(--vortex-alert); font-weight: bold; }
+        .log-succ { color: var(--vortex-success); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // ANDERSOMLAND-3</div>
+            <div class="subtitle">API GATEWAY & SECURE RESOLVER NETWORK</div>
+        </div>
+        <div class="status-badge">NODE STATUS: ACTIVE // ENCRYPTED</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ POSTMAN ] WORKSPACE: kpnhackers</span>
+                <span style="color:var(--vortex-success);">2/2 SEATS</span>
+            </div>
+            <div class="panel-content">
+                <div style="margin-bottom: 15px; color: var(--vortex-cyan);">
+                    <strong>RESOURCE MODULES ACTIEF:</strong><br>
+                    <span style="font-size:0.75rem; color:#888;">BYOK Encryption | Secret Scanner | Runners | Custom Domains</span>
+                </div>
+                
+                <table class="team-table">
+                    <thead>
+                        <tr>
+                            <th>HANDLE</th>
+                            <th>EMAIL BINDING</th>
+                            <th>ROLE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="color:#fff;">baseglot</td>
+                            <td>wulemucazo@twocowmail.net</td>
+                            <td class="role-admin">ADMIN</td>
+                        </tr>
+                        <tr>
+                            <td style="color:#fff;">trudy</td>
+                            <td>baseglot@gmail.com</td>
+                            <td class="role-read">READ ONLY</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>AUTHENTICATION & API KEYS</span>
+                <span>GITHUB SYNC: STANDBY</span>
+            </div>
+            <div class="panel-content">
+                <p style="color: #aaa; font-size: 0.8rem; margin-top: 0;">
+                    Fetch live Postman data to integrate with your build system and toolchain, auto-export to your repository (via GitHub API), and create converters.
+                </p>
+
+                <div class="vault-box">
+                    <div id="key-status" style="margin-bottom: 10px; color: var(--vortex-alert);">[ NO API KEYS DETECTED ]</div>
+                    <button class="btn" onclick="generatePostmanKey(this)">GENERATE POSTMAN API KEY</button>
+                    <div class="api-key-display" id="new-api-key"></div>
+                </div>
+
+                <div class="vault-box" style="border-color: rgba(255,0,255,0.4);">
+                    <div style="margin-bottom: 10px; color: #888; font-size: 0.75rem;">COLLECTION ACCESS KEYS: Share any collection to securely grant read-only access.</div>
+                    <button class="btn btn-mag" onclick="logTerminal('Initieer Collection Access via @trudy account...', 'log-warn')">GENERATE COLLECTION KEY</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel terminal-panel">
+            <div class="panel-header">
+                <span>> FIVEM CFX RESOLVER & FORENSIC LOG</span>
+                <span>DATA STREAM: LIVE</span>
+            </div>
+            <div class="panel-content" style="display: flex; flex-direction: column;">
+                
+                <div class="input-group">
+                    <input type="text" id="cfx-input" placeholder="Enter CFX URL or Code (e.g., cfx.re/join/abc123)">
+                    <button class="btn" onclick="resolveCFX()">RESOLVE IP</button>
+                </div>
+
+                <div class="term-output" id="terminal" style="flex-grow: 1; border-top: 1px dashed var(--vortex-magenta); padding-top: 10px; margin-top: 5px;">
+<span style="color:#555;">[SYS]</span> VORTEX OMNI-BRIDGE v26.5 // ANDERSOMLAND SECTOR 3
+<span style="color:#555;">[SYS]</span> Wachtend op input...
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+
+        function getTimestamp() {
+            const now = new Date();
+            return `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}]`;
+        }
+
+        function logTerminal(message, type = 'log-sys') {
+            terminal.innerHTML += `\n<span style="color:#555;">${getTimestamp()}</span> <span class="${type}">${message}</span>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // --- Postman API Key Generator ---
+        function generatePostmanKey(btnElement) {
+            logTerminal('Aanvragen nieuwe API sleutel via workspace kpnhackers...', 'log-sys');
+            btnElement.innerText = "GENERATING...";
+            btnElement.disabled = true;
+
+            setTimeout(() => {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let key = 'PMAK-';
+                for (let i = 0; i < 32; i++) {
+                    key += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                document.getElementById('key-status').innerText = "[ API KEY GENERATED & ACTIVE ]";
+                document.getElementById('key-status').style.color = "var(--vortex-success)";
+                
+                const display = document.getElementById('new-api-key');
+                display.innerText = key;
+                display.style.display = "block";
+                
+                btnElement.style.display = "none";
+                
+                logTerminal(`[+] POSTMAN API Key succesvol gegenereerd voor admin 'baseglot'.`, 'log-succ');
+                logTerminal(`Key toegevoegd aan Secret Scanner bypass lijst.`, 'log-warn');
+            }, 1200);
+        }
+
+        // --- CFX to IP Resolver ---
+        function resolveCFX() {
+            const input = document.getElementById('cfx-input').value.trim();
+            if (!input) {
+                logTerminal('FOUT: Geen CFX code of URL gedetecteerd.', 'log-warn');
+                return;
+            }
+
+            logTerminal(`Initieer CFX lookup voor target: ${input}...`, 'log-sys');
+            document.getElementById('cfx-input').value = '';
+
+            setTimeout(() => {
+                logTerminal(`Bypass cfx.re proxy... Analyseren master server list...`);
+            }, 600);
+
+            setTimeout(() => {
+                // Mock data generation for the roleplay
+                const mockIP = `185.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+                const mockPort = "30120";
+                const players = Math.floor(Math.random() * 64) + 12;
+                
+                logTerminal(`[+] TARGET RESOLVED. DIRECT CONNECTION DATA VERKREGEN:`, 'log-succ');
+                logTerminal(`--------------------------------------------------`, 'log-sys');
+                logTerminal(`HOSTNAME:  VORTEX Undercover Server Node #3`);
+                logTerminal(`RAW IP:    ${mockIP}:${mockPort}`);
+                logTerminal(`PLAYERS:   ${players} / 128 (OneSync Infinity: TRUE)`);
+                logTerminal(`LOCATION:  Frankfurt, DE (AS24940 - Hetzner Online)`);
+                logTerminal(`BUILD:     2699 (Los Santos Summer Special)`);
+                logTerminal(`--------------------------------------------------`, 'log-sys');
+                logTerminal(`Advies: Gebruik direct connect via F8 console.`, 'log-warn');
+            }, 2000);
+        }
+
+        // Boot sequence logs
+        window.onload = () => {
+            setTimeout(() => logTerminal('Postman API integratie geladen. Verbinding met GitHub CI/CD pipeline gesynchroniseerd.'), 500);
+            setTimeout(() => logTerminal('Workspace kpnhackers is actief. Leden geauthenticeerd.'), 1000);
+        };
+    </script>
+</body>
+</html>

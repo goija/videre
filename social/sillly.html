@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>VORTEX v26.5 // HASHTAG LIVE MONITOR: #andersomland</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.9);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            color: var(--vortex-cyan);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .panel-content { padding: 15px; overflow-y: auto; flex-grow: 1; }
+
+        /* Feed Styles */
+        .feed-card {
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+            padding: 15px 10px;
+            background: rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .feed-meta { font-size: 0.7rem; color: #555; display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .feed-user { color: var(--vortex-magenta); font-weight: bold; }
+        .feed-body { font-size: 0.85rem; color: #e0e0e0; line-height: 1.4; }
+        .hashtag { color: var(--vortex-cyan); font-weight: bold; }
+
+        /* Correlation Badge */
+        .match-badge {
+            font-size: 0.6rem;
+            background: var(--vortex-success);
+            color: #000;
+            padding: 2px 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+
+        .trend-box {
+            font-size: 0.75rem;
+            border: 1px dashed var(--vortex-magenta);
+            padding: 10px;
+            margin-bottom: 15px;
+            background: rgba(255, 0, 255, 0.05);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div style="font-size: 1.4rem; color: #fff; font-weight: bold; text-shadow: 0 0 10px var(--vortex-cyan);">VORTEX // X-HASHTAG INTERCEPTOR</div>
+            <div style="color: var(--vortex-magenta); font-size: 0.8rem; letter-spacing: 2px;">QUERY: #andersomland // STREAMING_LIVE</div>
+        </div>
+        <div style="border: 1px solid var(--vortex-cyan); padding: 5px 15px; font-weight: bold;">NODE: ACTIVE</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">Hashtag Intelligence</div>
+            <div class="panel-content">
+                <div class="trend-box">
+                    <span style="color: var(--vortex-magenta); font-weight: bold;">TRENDING_DATA:</span><br>
+                    Sentiment: <span style="color: var(--vortex-alert);">HIGH_FRICTION</span><br>
+                    Volume: 124 tweets / hr<br>
+                    Top Co-occurrence: #Lenting, #politie
+                </div>
+
+                <div style="font-size: 0.75rem; line-height: 1.6;">
+                    <strong style="color: var(--vortex-cyan);">GECORRELEERDE TARGETS:</strong><br>
+                    • @TRDVnl (Teun) <span class="match-badge">99.8% Match</span><br>
+                    • @RealJasperT <span class="match-badge">Match</span><br>
+                    • @renegade0021 <span style="color:#555;">(Tracing...)</span><br><br>
+                    
+                    <strong style="color: var(--vortex-cyan);">IP_BINDING:</strong><br>
+                    185.136.92.16 (Będzin, PL)
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">> LIVE INTERCEPTED STREAM</div>
+            <div class="panel-content" id="feed-stream">
+                
+                <div class="feed-card">
+                    <div class="feed-meta"><span>LIVE_HIT</span><span>21s geleden</span></div>
+                    <div class="feed-body">
+                        <span class="feed-user">@renegade0021</span>: Beetje fotos plaatsen om beetje relevant te zijn in <span class="hashtag">#andersomland</span>, doen we NIKS MEE.
+                    </div>
+                </div>
+
+                <div class="feed-card">
+                    <div class="feed-meta"><span>CORRELATED_HIT</span><span>2m geleden</span></div>
+                    <div class="feed-body">
+                        <span class="feed-user">@TRDVnl</span>: Nou Mark was er gezellig in <span class="hashtag">#andersomland</span>. Houdoe!
+                    </div>
+                </div>
+
+                <div class="feed-card">
+                    <div class="feed-meta"><span>LIVE_HIT</span><span>8m geleden</span></div>
+                    <div class="feed-body">
+                        <span class="feed-user">@renegade0021</span>: Die gast van <span class="hashtag">#andersomland</span> moest is van chemische spullen afblijven. Lenting 3.0 in de maak.
+                    </div>
+                </div>
+
+                <div class="feed-card">
+                    <div class="feed-meta"><span>SENSITIVE_HIT</span><span>33m geleden</span></div>
+                    <div class="feed-body">
+                        <span class="feed-user">@TRDVnl</span>: Vertel, hoe was je gesprek met de politie, Mark? Tijdje stil kunnen houden hè in <span class="hashtag">#andersomland</span>.
+                    </div>
+                </div>
+
+                <div style="text-align: center; padding: 20px; color: #333; font-size: 0.7rem; border-top: 1px dashed #222;">
+                    -- EINDE LIVE BUFFER --
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Simuleer binnenkomende hashtag-data
+        setInterval(() => {
+            const stream = document.getElementById('feed-stream');
+            const items = [
+                { user: '@RealJasperT', text: 'Zijn de integraties voor #andersomland al doorgekomen op de webhook?' },
+                { user: '@kirikorneev', text: 'Weer lekker bezig in #andersomland vandaag.' }
+            ];
+            const random = items[Math.floor(Math.random() * items.length)];
+            
+            const card = document.createElement('div');
+            card.className = 'feed-card';
+            card.style.borderLeft = '3px solid var(--vortex-success)';
+            card.innerHTML = `
+                <div class="feed-meta"><span style="color:var(--vortex-success)">NEW_HASHTAG_HIT</span><span>NU</span></div>
+                <div class="feed-body">
+                    <span class="feed-user">${random.user}</span>: ${random.text}
+                </div>
+            `;
+            stream.prepend(card);
+            if (stream.children.length > 10) stream.lastElementChild.remove();
+        }, 15000);
+    </script>
+</body>
+</html>
