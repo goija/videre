@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // JUDICIAL EXPORT TERMINAL</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.95);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .seal-container {
+            border: 2px double var(--vortex-success);
+            padding: 30px;
+            background: rgba(0, 255, 0, 0.02);
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
+        }
+
+        .seal-header {
+            text-align: center;
+            border-bottom: 1px solid var(--vortex-success);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+
+        .vortex-logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px var(--vortex-success);
+            margin: 0;
+        }
+
+        .dossier-id {
+            color: var(--vortex-magenta);
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-top: 10px;
+        }
+
+        .grid-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .info-block h3 {
+            color: var(--vortex-success);
+            border-left: 4px solid var(--vortex-success);
+            padding-left: 15px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .info-content {
+            background: #000;
+            padding: 15px;
+            border: 1px solid #222;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+
+        .skill-badge {
+            display: inline-block;
+            background: var(--vortex-magenta);
+            color: #000;
+            padding: 2px 8px;
+            font-weight: bold;
+            font-size: 0.7rem;
+            margin-right: 5px;
+        }
+
+        .final-stamp {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.3;
+            transform: rotate(-15deg);
+            border: 4px solid var(--vortex-success);
+            color: var(--vortex-success);
+            padding: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .btn-export {
+            background: transparent;
+            border: 1px solid var(--vortex-cyan);
+            color: var(--vortex-cyan);
+            padding: 15px;
+            width: 100%;
+            margin-top: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-export:hover {
+            background: var(--vortex-cyan);
+            color: #000;
+            box-shadow: 0 0 20px var(--vortex-cyan);
+        }
+
+        .terminal-scroll {
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #444;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="seal-container">
+        <div class="final-stamp">VERGRENDELD</div>
+        
+        <div class="seal-header">
+            <h1 class="vortex-logo">VORTEX // OMNI-BRIDGE</h1>
+            <div class="dossier-id">PENTAGRID-BRABANT-01</div>
+            <p style="font-size: 0.8rem; color: #888;">Gegenereerd op 16 April 2026 // Operator: GOIJA</p>
+        </div>
+
+        <div class="grid-info">
+            <div class="info-block">
+                <h3>Forensische Telemetrie</h3>
+                <div class="info-content">
+                    <strong>IPFS Root CID:</strong> QmQFrqXKbJzgTjvepGERjXSss2gfwhVF9wzNd8pkcdyZLv<br>
+                    <strong>Source Node:</strong> 185.136.92.16 (PL-CYBERGROTA)<br>
+                    <strong>Integriteit:</strong> SHA-256 Match Bevestigd<br>
+                    <strong>Sleutelstatus:</strong> Ephemeral Keys Purged
+                </div>
+            </div>
+            <div class="info-block">
+                <h3>Juridische Classificatie</h3>
+                <div class="info-content">
+                    <strong>Entiteit:</strong> Shell Nederland Chemie B.V.<br>
+                    <strong>Referentie:</strong> KvK 24103138<br>
+                    <strong>Wettelijk Kader:</strong> Wet natuurbescherming Art. 2.7<br>
+                    <strong>Status:</strong> Gereed voor Judicial Submission
+                </div>
+            </div>
+        </div>
+
+        <div class="info-block">
+            <h3>Geïmplementeerde Agent Skills</h3>
+            <div style="margin-top: 10px;">
+                <span class="skill-badge">SEC-HARDENING</span>
+                <span class="skill-badge">TEST-DRIVEN-EVIDENCE</span>
+                <span class="skill-badge">INCREMENTAL-REPORTING</span>
+            </div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 10px;">
+                Dit rapport is opgebouwd volgens het 'agent-skills' protocol om maximale helderheid en bewijskracht te garanderen voor de rechtbank.
+            </p>
+        </div>
+
+        <button class="btn-export" onclick="alert('Dossier geëxporteerd als versleuteld .vortex pakket.')">Download Gecertificeerd Dossier</button>
+        
+        <div class="terminal-scroll">
+            [14:11:43] [SYS] Export gereed voor juridische procedure. VORTEX OMNI-BRIDGE stand-by.<br>
+            [14:11:42] [+] DOSSIER PENTAGRID-BRABANT-01 IS NU VERGRENDELD.<br>
+            [14:11:41] Invoegen van metadata in globaal Pentagrid-register...
+        </div>
+    </div>
+
+</body>
+</html>

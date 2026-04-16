@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // DECENTRALIZED EVIDENCE VIEWER</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --vortex-yellow: #ffcc00;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-cyan); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-magenta); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(0, 255, 0, 0.1); border: 1px solid var(--vortex-success); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-success);}
+
+        /* --- Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            grid-template-rows: 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-content { padding: 0; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; position: relative;}
+
+        /* --- Sidebar File List --- */
+        .file-list { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .file-btn {
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+            font-family: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .file-btn:hover { border-color: var(--vortex-cyan); background: rgba(0, 229, 255, 0.15); }
+        .file-btn.active { border-color: var(--vortex-magenta); background: rgba(255, 0, 255, 0.15); box-shadow: 0 0 10px rgba(255, 0, 255, 0.2); }
+        .file-type { font-size: 0.7rem; color: var(--vortex-magenta); font-weight: bold; }
+        .file-cid { font-size: 0.65rem; color: #666; margin-top: 5px; word-break: break-all;}
+
+        /* --- Viewer Area --- */
+        .viewer-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- Terminal Loader --- */
+        #loader-terminal {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+        .log-time { color: #555; margin-right: 8px; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-succ { color: var(--vortex-success); font-weight: bold;}
+
+        /* --- Document Styles --- */
+        .document { display: none; width: 100%; max-width: 800px; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        
+        /* PDF Style */
+        .doc-pdf {
+            background: #e0e4e8;
+            color: #111;
+            padding: 40px;
+            font-family: 'Times New Roman', Times, serif;
+            position: relative;
+        }
+        .pdf-header { border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; font-weight: bold;}
+        .pdf-stamp {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            transform: rotate(-35deg);
+            font-size: 3rem;
+            color: rgba(255, 0, 0, 0.15);
+            border: 5px solid rgba(255, 0, 0, 0.15);
+            padding: 10px;
+            font-weight: bold;
+            font-family: sans-serif;
+            pointer-events: none;
+        }
+        .redacted { background-color: #000; color: #000; padding: 0 5px; }
+
+        /* XML Style */
+        .doc-xml {
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 20px;
+            font-family: Consolas, monospace;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            width: 100%;
+        }
+        .xml-tag { color: #7ee787; }
+        .xml-attr { color: #79c0ff; }
+        .xml-val { color: #a5d6ff; }
+
+        /* DOCX Style */
+        .doc-docx {
+            background: #fff;
+            color: #000;
+            padding: 40px;
+            font-family: Arial, sans-serif;
+        }
+        .docx-title { text-align: center; font-size: 1.5rem; font-weight: bold; text-decoration: underline; margin-bottom: 30px;}
+        .docx-highlight { background: yellow; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vortex-cyan); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // DECENTRALIZED EVIDENCE VIEWER</div>
+            <div class="subtitle">BUCKET: WOO-BRABANT // DECRYPTING IPFS PAYLOADS</div>
+        </div>
+        <div class="status-badge">VAULT SECURED</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ EVIDENCE VAULT ]</span>
+            </div>
+            <div class="panel-content">
+                <div class="file-list">
+                    <button class="file-btn" onclick="loadFile('pdf', this)">
+                        <span class="file-type">[PDF DOCUMENT]</span>
+                        <span>WOO_Verzoek_Natura2000_Shell.pdf</span>
+                        <span class="file-cid">CID: QmYaUPaaAu72LnfvLCx9Y9QCXqhoBGE...</span>
+                    </button>
+                    
+                    <button class="file-btn" onclick="loadFile('xml', this)">
+                        <span class="file-type">[XML DATANODE]</span>
+                        <span>Bestuursrecht_Art2.7_Notities.xml</span>
+                        <span class="file-cid">CID: QmNRkUWNeYNaydkdAG2PmYuTm9v2x...</span>
+                    </button>
+
+                    <button class="file-btn" onclick="loadFile('docx', this)">
+                        <span class="file-type">[DOCX REPORT]</span>
+                        <span>Interventie_Verslag_Brabant_2024.docx</span>
+                        <span class="file-cid">CID: QmaYAaLsNWD3WPpS9JmjjgnsGSwXC...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ FORENSIC VIEWER ]</span>
+                <span id="viewer-status" style="color: #666;">AWAITING SELECTION...</span>
+            </div>
+            <div class="viewer-container">
+                
+                <div id="intro-msg" style="color: #555; text-align: center; margin-top: 100px;">
+                    Select a file from the vault to begin decryption and rendering.
+                </div>
+
+                <div id="loader-terminal"></div>
+
+                <div id="doc-pdf" class="document doc-pdf">
+                    <div class="pdf-stamp">CONFIDENTIAL<br>WOO ARCHIVE</div>
+                    <div class="pdf-header">
+                        PROVINCIE NOORD-BRABANT<br>
+                        Afdeling Vergunningverlening, Toezicht en Handhaving (VTH)
+                    </div>
+                    <p><strong>Datum:</strong> 12 November 2024<br>
+                    <strong>Kenmerk:</strong> WOO-2024-8842 / <span class="redacted">XXXXX</span><br>
+                    <strong>Betreft:</strong> Handhavingsverzoek Wet natuurbescherming (Wnb) Art 2.7 - Shell Moerdijk</p>
+                    
+                    <p>Geacht college van Gedeputeerde Staten,</p>
+                    <p>Hierbij verzoeken wij, handelend onder de Wet open overheid (Woo), om de volledige openbaarmaking van alle correspondentie, notities en (ontwerp)besluiten gerelateerd aan de Natura 2000-vergunningen van de Shell-faciliteiten (KvK: <span class="redacted">24103138</span>) binnen de provincie Noord-Brabant.</p>
+                    <p>Uit recent locatieonderzoek is gebleken dat er significante onduidelijkheden bestaan omtrent de stikstofdepositie en de compenserende maatregelen zoals vereist onder <strong>Artikel 2.7 Wnb</strong>.</p>
+                    <p>Wij verzoeken specifiek om inzicht in de ruimtelijke bestuursrechtelijke procedures die de afgelopen 24 maanden zijn gevoerd, waarbij handhaving op de milieuregels mogelijk is opgeschort of ingetrokken wegens [GEREDIGEERD].</p>
+                </div>
+
+                <div id="doc-xml" class="document doc-xml">
+<pre><code><span class="xml-tag">&lt;?xml</span> <span class="xml-attr">version</span>=<span class="xml-val">"1.0"</span> <span class="xml-attr">encoding</span>=<span class="xml-val">"UTF-8"</span><span class="xml-tag">?&gt;</span>
+<span class="xml-tag">&lt;dossier</span> <span class="xml-attr">id</span>=<span class="xml-val">"PENTAGRID-BRABANT-01"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;metadata&gt;</span>
+        <span class="xml-tag">&lt;source&gt;</span>IPFS_Woo_Archive<span class="xml-tag">&lt;/source&gt;</span>
+        <span class="xml-tag">&lt;classification&gt;</span>Restricted<span class="xml-tag">&lt;/classification&gt;</span>
+    <span class="xml-tag">&lt;/metadata&gt;</span>
+    
+    <span class="xml-tag">&lt;nodes&gt;</span>
+        <span class="xml-tag">&lt;node</span> <span class="xml-attr">type</span>=<span class="xml-val">"ruimtelijk_bestuursrecht"</span> <span class="xml-attr">status</span>=<span class="xml-val">"critical"</span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;target_entity&gt;</span>Shell Nederland Chemie B.V.<span class="xml-tag">&lt;/target_entity&gt;</span>
+            <span class="xml-tag">&lt;kvk_reference&gt;</span>24103138<span class="xml-tag">&lt;/kvk_reference&gt;</span>
+            <span class="xml-tag">&lt;violation_scope&gt;</span>
+                <span class="xml-tag">&lt;law&gt;</span>Wet natuurbescherming (Wnb)<span class="xml-tag">&lt;/law&gt;</span>
+                <span class="xml-tag">&lt;article&gt;</span>2.7<span class="xml-tag">&lt;/article&gt;</span>
+                <span class="xml-tag">&lt;description&gt;</span>Ontbrekende/inadequate Natura 2000 toetsing<span class="xml-tag">&lt;/description&gt;</span>
+            <span class="xml-tag">&lt;/violation_scope&gt;</span>
+            <span class="xml-tag">&lt;action_required&gt;</span>True<span class="xml-tag">&lt;/action_required&gt;</span>
+        <span class="xml-tag">&lt;/node&gt;</span>
+        
+        <span class="xml-tag">&lt;node</span> <span class="xml-attr">type</span>=<span class="xml-val">"infrastructure_link"</span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;domain&gt;</span>woo-brabant.ipfs.io<span class="xml-tag">&lt;/domain&gt;</span>
+            <span class="xml-tag">&lt;sync_status&gt;</span>Active<span class="xml-tag">&lt;/sync_status&gt;</span>
+        <span class="xml-tag">&lt;/node&gt;</span>
+    <span class="xml-tag">&lt;/nodes&gt;</span>
+<span class="xml-tag">&lt;/dossier&gt;</span></code></pre>
+                </div>
+
+                <div id="doc-docx" class="document doc-docx">
+                    <div class="docx-title">INTERVENTIE VERSLAG 2024 - INTERN</div>
+                    <p><strong>Auteur:</strong> [Anoniem / Deviant Securit]<br>
+                    <strong>Dossier:</strong> Pentagrid / Brabant Omgevingsrecht<br>
+                    <strong>Datum update:</strong> 22 december 2024</p>
+                    <hr>
+                    <h3>1. Geconstateerde Discrepanties</h3>
+                    <p>Tijdens de analyse van de kadastrale kaarten en het vergunningenregister (specifiek percelen SPN00 E 1012, 111, 613) zijn aanzienlijke gaten ontdekt in de documentatie rondom de bestemmingsplannen te Scherpenisse. Het lijkt erop dat handhavingsacties bewust zijn stilgelegd.</p>
+                    
+                    <h3>2. Koppeling Shell / Wnb</h3>
+                    <p>De <span class="docx-highlight">vergunning ingevolge artikel 2.7 Wnb</span> voor de nabijgelegen faciliteiten ontbreekt in het publieke register. Onze S3-bucket scrape heeft echter aangetoond dat de documenten wel degelijk zijn opgesteld, maar op de 'gefilterde' lijst zijn geplaatst om verdere Wob/Woo-verzoeken te frustreren.</p>
+
+                    <h3>3. Strategische Stappen (Pro Se)</h3>
+                    <ul>
+                        <li>Bewaar alle huidige XML en PDF exports decentraal (Filebase/IPFS) om takedowns via Cloudflare of de overheid te voorkomen.</li>
+                        <li>Integreer deze bestuursrechtelijke fouten als hoofdpunt in het 'Pentagrid' verweer ter onderbouwing van onrechtmatig handelen door de toezichthouder.</li>
+                        <li>Verifieer eigendomsaktes tegen de 'opvraag testament.pdf' om mogelijke belangenverstrengeling bij grondoverdracht te bewijzen.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const terminal = document.getElementById('loader-terminal');
+        const introMsg = document.getElementById('intro-msg');
+        const viewerStatus = document.getElementById('viewer-status');
+
+        function getLogTime() {
+            const d = new Date();
+            return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`;
+        }
+
+        function loadFile(fileType, btnElement) {
+            // Update active button
+            document.querySelectorAll('.file-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // Hide all documents and intro
+            introMsg.style.display = 'none';
+            document.querySelectorAll('.document').forEach(doc => doc.style.display = 'none');
+            
+            // Setup Terminal Loader
+            terminal.innerHTML = "";
+            terminal.style.display = 'block';
+            viewerStatus.innerText = "DECRYPTING PAYLOAD...";
+            viewerStatus.style.color = "var(--vortex-magenta)";
+
+            let logs = [];
+            if(fileType === 'pdf') {
+                logs = [
+                    "Resolving CID: QmYaUPaaAu72LnfvLCx9Y9QCXqhoBGErJVdDAFeaonEDGk...",
+                    "Fetching blocks from IPFS peer network...",
+                    "Reconstructing PDF binary structure...",
+                    "Applying optical character recognition (OCR) on redacted fields...",
+                    "<span class='log-succ'>[+] SUCCESS: Payload rendered.</span>"
+                ];
+            } else if (fileType === 'xml') {
+                logs = [
+                    "Resolving CID: QmNRkUWNeYNaydkdAG2PmYuTm9v2xe8WPnofHGeywRnwBm...",
+                    "Fetching raw data from decentralized storage...",
+                    "Parsing XML schema and XSLT stylesheets...",
+                    "Formatting nodes for VORTEX interface...",
+                    "<span class='log-succ'>[+] SUCCESS: Data tree loaded.</span>"
+                ];
+            } else if (fileType === 'docx') {
+                logs = [
+                    "Resolving CID: QmaYAaLsNWD3WPpS9JmjjgnsGSwXCkXkztvr9Uvr4xfHrz...",
+                    "Bypassing Microsoft Word encryption wrappers...",
+                    "Extracting raw text and formatting markup...",
+                    "Identifying strategic keywords (Pentagrid, Wnb)...",
+                    "<span class='log-succ'>[+] SUCCESS: Document decrypted.</span>"
+                ];
+            }
+
+            // Simulate loading process
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < logs.length) {
+                    terminal.innerHTML += `\n<span class="log-time">${getLogTime()}</span> <span class="log-sys">${logs[i]}</span>`;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        terminal.style.display = 'none';
+                        document.getElementById(`doc-${fileType}`).style.display = 'block';
+                        viewerStatus.innerText = "PAYLOAD RENDERED";
+                        viewerStatus.style.color = "var(--vortex-success)";
+                    }, 500);
+                }
+            }, 400);
+        }
+    </script>
+</body>
+</html>

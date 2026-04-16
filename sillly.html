@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // JSON INJECTOR</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-cyan); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-magenta); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(0, 229, 255, 0.1); border: 1px solid var(--vortex-cyan); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-cyan);}
+
+        /* --- Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .panel-content {
+            padding: 15px;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Forms & Inputs --- */
+        .input-group { margin-bottom: 15px; }
+        .input-label { color: var(--vortex-magenta); font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase;}
+        
+        textarea {
+            width: 100%;
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed var(--vortex-cyan);
+            color: #fff;
+            font-family: monospace;
+            font-size: 0.85rem;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            outline: none;
+        }
+        textarea:focus { border-color: var(--vortex-magenta); }
+
+        input[type="text"] {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--vortex-border);
+            color: #fff;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+        input[type="text"]:focus { border-color: var(--vortex-cyan); }
+
+        .header-box {
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        .header-key { color: var(--vortex-cyan); font-weight: bold; }
+
+        .btn {
+            background: transparent; border: 1px solid var(--vortex-cyan); color: var(--vortex-cyan); 
+            padding: 12px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; transition: 0.2s;
+            width: 100%; margin-top: 10px; font-size: 0.9rem;
+        }
+        .btn:hover { background: var(--vortex-cyan); color: #000; }
+        .btn-mag { border-color: var(--vortex-magenta); color: var(--vortex-magenta); }
+        .btn-mag:hover { background: var(--vortex-magenta); color: #000; }
+        .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; background: transparent; }
+
+        /* --- Terminal --- */
+        .terminal-panel { grid-column: span 2; border-color: var(--vortex-magenta); height: 250px;}
+        .terminal-panel .panel-header { background: rgba(255, 0, 255, 0.1); border-bottom-color: var(--vortex-magenta); color: var(--vortex-magenta); }
+        .term-output { font-family: monospace; font-size: 0.8rem; color: #aaa; line-height: 1.5; white-space: pre-wrap; }
+        
+        .log-time { color: #555; margin-right: 8px; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-succ { color: var(--vortex-success); font-weight: bold;}
+        .log-err { color: var(--vortex-alert); font-weight: bold; }
+        .log-cmd { color: #fff; background: rgba(255,0,255,0.1); border-left: 2px solid var(--vortex-magenta); padding: 2px 8px; display: block; margin: 4px 0; word-break: break-all;}
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vortex-cyan); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // JSON EXTRACTOR & POST INJECTOR</div>
+            <div class="subtitle">cURL PROTOCOL INTERFACE // APPLICATION/JSON</div>
+        </div>
+        <div class="status-badge">TUNNEL: ENCRYPTED</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ PAYLOAD EXTRACTOR ]</span>
+            </div>
+            <div class="panel-content">
+                <span class="input-label">RUWE JSON DATA</span>
+                <textarea id="json-input" placeholder="Plak hier uw ruwe JSON payload...
+
+Voorbeeld:
+{
+  &quot;target&quot;: &quot;185.136.92.16&quot;,
+  &quot;action&quot;: &quot;override_firewall&quot;,
+  &quot;auth_token&quot;: &quot;VRTX-AUTH-1460842&quot;
+}"></textarea>
+                <button class="btn" onclick="extractJSON()">EXTRACT & VALIDATE</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ POST INJECTOR ]</span>
+            </div>
+            <div class="panel-content">
+                <div class="input-group">
+                    <span class="input-label">TARGET URL</span>
+                    <input type="text" id="target-url" value="https://api.vortex.net/v1/inject">
+                </div>
+                
+                <span class="input-label">REQUEST HEADERS</span>
+                <div class="header-box">
+                    <span class="header-key">Content-Type:</span> application/json<br>
+                    <span class="header-key">User-Agent:</span> VORTEX-Node/26.5 (X11; Linux x86_64)<br>
+                    <span class="header-key">Accept:</span> */*
+                </div>
+
+                <div style="flex-grow: 1;"></div>
+                <button class="btn btn-mag" id="inject-btn" onclick="initiatePost()">INITIEER HTTP POST</button>
+            </div>
+        </div>
+
+        <div class="panel terminal-panel">
+            <div class="panel-header">
+                <span>> SYSTEEM TERMINAL</span>
+            </div>
+            <div class="panel-content term-output" id="terminal">
+<span class="log-time">[SYS]</span> VORTEX JSON Parser & Injector Module geladen.
+<span class="log-time">[SYS]</span> Wachtend op geldige payload...
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        let validPayload = null;
+
+        function getLogTime() {
+            const d = new Date();
+            return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`;
+        }
+
+        function logTerminal(message, cssClass) {
+            terminal.innerHTML += `\n<span class="log-time">${getLogTime()}</span> <span class="${cssClass}">${message}</span>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function extractJSON() {
+            const inputField = document.getElementById('json-input');
+            const rawText = inputField.value.trim();
+
+            if (!rawText) {
+                logTerminal('FOUT: Geen data gedetecteerd in invoerveld.', 'log-err');
+                return;
+            }
+
+            logTerminal('Analyseren van payload structuur...', 'log-sys');
+
+            try {
+                // Probeer te parsen
+                const parsed = JSON.parse(rawText);
+                
+                // Als succesvol, formatteer netjes terug in het veld
+                const formatted = JSON.stringify(parsed, null, 2);
+                inputField.value = formatted;
+                validPayload = formatted;
+
+                logTerminal('[+] JSON Validatie Succesvol. Syntax is correct.', 'log-succ');
+                logTerminal(`Payload grootte: ${new Blob([formatted]).size} bytes gereed voor injectie.`, 'log-sys');
+            } catch (e) {
+                validPayload = null;
+                logTerminal(`[!] PARSE FOUT: Ongeldige JSON format.`, 'log-err');
+                logTerminal(`Details: ${e.message}`, 'log-err');
+            }
+        }
+
+        function initiatePost() {
+            const targetUrl = document.getElementById('target-url').value;
+            const btn = document.getElementById('inject-btn');
+
+            if (!validPayload) {
+                logTerminal('FOUT: Extract en valideer eerst een geldige JSON payload voordat u de aanval initieert.', 'log-err');
+                return;
+            }
+
+            if (!targetUrl.startsWith('http')) {
+                logTerminal('FOUT: Ongeldige Target URL. Gebruik http:// of https://', 'log-err');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "INJECTING...";
+
+            logTerminal(`------------------------------------------------`, 'log-sys');
+            logTerminal(`Genereren van cURL command sequence...`, 'log-sys');
+            
+            // Minimaliseer JSON voor de curl command log
+            const minifiedJson = JSON.stringify(JSON.parse(validPayload));
+            
+            setTimeout(() => {
+                logTerminal('Uitvoeren equivalent aan:', 'log-sys');
+                logTerminal(`curl -X POST -H "Content-Type: application/json" -d '${minifiedJson}' ${targetUrl}`, 'log-cmd');
+            }, 500);
+
+            setTimeout(() => {
+                logTerminal(`* Resolving DNS voor doelwit...`, 'log-sys');
+                logTerminal(`* Verbinding maken met target host via TCP poort 443...`, 'log-sys');
+            }, 1200);
+
+            setTimeout(() => {
+                logTerminal(`* SSL/TLS Handshake voltooid (TLS 1.3).`, 'log-sys');
+                logTerminal(`> POST request verzonden. Wachtend op server antwoord...`, 'log-sys');
+            }, 2000);
+
+            setTimeout(() => {
+                logTerminal(`< HTTP/1.1 200 OK`, 'log-succ');
+                logTerminal(`< Server: VORTEX-Gateway/nginx`, 'log-sys');
+                logTerminal(`< Content-Type: application/json`, 'log-sys');
+                logTerminal(`[+] INJECTIE SUCCESVOL. Response payload: {"status":"success", "message":"Payload accepted and processed."}`, 'log-succ');
+                
+                btn.disabled = false;
+                btn.innerText = "INITIEER HTTP POST";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

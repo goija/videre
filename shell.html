@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // SHELL-MOERDIJK LEGAL ARCHIVE</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --vortex-yellow: #ffcc00;
+            --card-bg: rgba(0, 0, 0, 0.9);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-yellow);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-yellow); font-weight: bold; }
+        .subtitle { font-size: 0.8rem; color: var(--vortex-yellow); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(255, 204, 0, 0.1); border: 1px solid var(--vortex-yellow); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-yellow);}
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .panel-content { padding: 15px; overflow-y: auto; flex-grow: 1; }
+
+        /* --- Timeline & File List --- */
+        .file-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #222;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .file-item:hover { border-color: var(--vortex-cyan); background: rgba(0, 229, 255, 0.05); }
+        .file-item.active { border-color: var(--vortex-magenta); border-left: 5px solid var(--vortex-magenta); background: rgba(255, 0, 255, 0.05); }
+        .file-date { font-size: 0.7rem; color: var(--vortex-magenta); font-weight: bold; }
+        .file-name { color: #fff; font-size: 0.85rem; display: block; margin: 4px 0; }
+        .file-size { font-size: 0.7rem; color: #666; }
+
+        /* --- Analysis Viewer --- */
+        .viewer {
+            padding: 30px;
+            line-height: 1.6;
+            color: #ddd;
+            font-size: 0.95rem;
+        }
+        .highlight-box {
+            border: 1px solid var(--vortex-alert);
+            background: rgba(255, 0, 60, 0.05);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .label { color: var(--vortex-cyan); font-weight: bold; text-transform: uppercase; font-size: 0.75rem; }
+
+        .terminal {
+            background: #000;
+            border-top: 1px solid #333;
+            padding: 10px;
+            font-size: 0.8rem;
+            color: #555;
+            height: 120px;
+            overflow-y: auto;
+        }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-succ { color: var(--vortex-success); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX // SHELL-MOERDIJK IPFS ARCHIVE</div>
+            <div class="subtitle">DIRECTORY CID: QmYA9t8UZb6hM3Ws235FpQszJoVQm8guZPDpYzXZW5RJeK</div>
+        </div>
+        <div class="status-badge">519 MB PAYLOAD IDENTIFIED</div>
+    </header>
+
+    <div class="grid-container">
+        <div class="panel">
+            <div class="panel-header">Dossier Chronologie</div>
+            <div class="panel-content">
+                <div class="file-item active" onclick="loadContent('doc1', this)">
+                    <span class="file-date">12 SEPT 2018</span>
+                    <span class="file-name">Besluit 12 september 2018_geanonimiseerd.pdf</span>
+                    <span class="file-size">SIZE: 202 MB // CID: Qmbu...6xCt</span>
+                </div>
+                <div class="file-item" onclick="loadContent('doc2', this)">
+                    <span class="file-date">APRIL 2019</span>
+                    <span class="file-name">E-mail correspondentie ODBN & Shell.pdf</span>
+                    <span class="file-size">SIZE: 6.0 MB // CID: QmdU...3hGi</span>
+                </div>
+                <div class="file-item" onclick="loadContent('doc3', this)">
+                    <span class="file-date">26 JUNI 2021</span>
+                    <span class="file-name">Besluit Natura 2000 Chemieweg 25.pdf</span>
+                    <span class="file-size">SIZE: 106 MB // CID: QmeL...j4kR</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">Forensische Analyse</div>
+            <div class="panel-content viewer" id="content-view">
+                <span class="label">Context Analyse:</span>
+                <h3 style="color:#fff;">WNB Artikel 2.7 Overeenstemming</h3>
+                <p>Dit archief bevat de volledige administratieve keten van vergunningverlening voor de Shell Moerdijk faciliteit. De omvang van de bestanden (totaal > 500MB) suggereert dat hierin alle technische berekeningen van de stikstofdepositie op omliggende Natura 2000 gebieden zijn opgenomen.</p>
+                
+                <div class="highlight-box">
+                    <span class="label" style="color:var(--vortex-alert);">Strategische Observatie:</span>
+                    <p>De correspondentie uit 2019 tussen de ODBN en Shell over "gelakte documenten" vormt een essentieel bewijsstuk voor de bewering dat informatie over milieueffecten bewust buiten de openbaarheid is gehouden vóór de inwerkingtreding van de Woo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="terminal" id="term">
+        [SYS] IPFS Gateway verbinding stabiel. 6 Objects gevonden.<br>
+        [SYS] Cross-matching CID QmYA9t... met Shell_KvK_24103138... <span class="log-succ">[MATCH FOUND]</span>
+    </div>
+
+    <script>
+        const data = {
+            doc1: `<h3>Primair Besluit (2018)</h3><p>Dit document (202 MB) bevat de initiële vergunningsvoorwaarden. Belangrijk voor het Pentagrid om de nulsituatie van de stikstofuitstoot vast te stellen.</p>`,
+            doc2: `<h3>Correspondentie ODBN (2019)</h3><p>Bewijs van actieve samenwerking tussen toezichthouder en vervuiler om specifieke data-nodes te anonimiseren. Cruciaal voor het aantonen van procedurele onrechtmatigheid.</p>`,
+            doc3: `<h3>Natura 2000 Besluit (2021)</h3><p>Focus op Chemieweg 25. Dit document koppelt de fysieke locatie direct aan de overtreding van Artikel 2.7 Wnb. Hierin moeten de 'discrepanties' in de stikstofberekeningen staan.</p>`
+        };
+
+        function loadContent(id, el) {
+            document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('content-view').innerHTML = data[id];
+            const term = document.getElementById('term');
+            term.innerHTML += `<br><span class="log-sys">[SYS] Fetching metadata for ${id}... Done.</span>`;
+            term.scrollTop = term.scrollHeight;
+        }
+    </script>
+</body>
+</html>

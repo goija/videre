@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // FORENSIC HEX VIEWER</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --vortex-yellow: #ffcc00;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-magenta);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-magenta); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-cyan); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(255, 0, 255, 0.1); border: 1px solid var(--vortex-magenta); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-magenta);}
+
+        /* --- Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-content { padding: 15px; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; }
+
+        /* --- Metadata --- */
+        .meta-box { margin-bottom: 15px; border-bottom: 1px dashed rgba(0, 229, 255, 0.2); padding-bottom: 10px; }
+        .meta-label { color: var(--vortex-magenta); font-size: 0.75rem; font-weight: bold; display: block; margin-bottom: 3px; }
+        .meta-val { color: #fff; font-size: 0.9rem; font-family: monospace; word-break: break-all; }
+        
+        .btn {
+            background: transparent; border: 1px solid var(--vortex-cyan); color: var(--vortex-cyan); 
+            padding: 12px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; transition: 0.2s; width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover { background: var(--vortex-cyan); color: #000; box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+        .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; background: transparent; box-shadow: none;}
+        .btn-alert { border-color: var(--vortex-alert); color: var(--vortex-alert); }
+        .btn-alert:hover { background: var(--vortex-alert); color: #000; box-shadow: 0 0 10px rgba(255, 0, 60, 0.5); }
+
+        /* --- Hex Viewer --- */
+        .hex-viewer {
+            display: grid;
+            grid-template-columns: 80px 1fr 200px;
+            gap: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            background: #050505;
+            padding: 15px;
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #222;
+        }
+        
+        .hex-col { display: flex; flex-direction: column; }
+        .hex-header { color: var(--vortex-magenta); font-weight: bold; padding-bottom: 10px; border-bottom: 1px solid #333; margin-bottom: 10px; }
+        
+        .addr { color: #666; }
+        .hex-data { color: var(--vortex-success); letter-spacing: 2px;}
+        .ascii-data { color: #ccc; white-space: pre;}
+        
+        .highlight { background: rgba(255, 0, 255, 0.3); color: #fff; padding: 0 2px;}
+        .highlight-critical { background: rgba(255, 0, 60, 0.5); color: #fff; padding: 0 2px; font-weight: bold;}
+
+        /* --- Terminal --- */
+        .terminal-panel { grid-column: span 2; border-color: var(--vortex-success); height: 200px;}
+        .terminal-panel .panel-header { background: rgba(0, 255, 0, 0.1); border-bottom-color: var(--vortex-success); color: var(--vortex-success); }
+        .term-output { font-family: monospace; font-size: 0.8rem; color: #aaa; line-height: 1.5; white-space: pre-wrap; background: #000; padding: 15px; margin: 0; flex-grow: 1; overflow-y: auto;}
+        
+        .log-time { color: #555; margin-right: 8px; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-succ { color: var(--vortex-success); font-weight: bold;}
+        .log-err { color: var(--vortex-alert); font-weight: bold;}
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // FORENSIC HEX VIEWER</div>
+            <div class="subtitle">DEEP-PACKET INSPECTION // RAW DATA STREAM ANALYSIS</div>
+        </div>
+        <div class="status-badge" id="capture-status">CAPTURE READY</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel" style="grid-row: span 1;">
+            <div class="panel-header">
+                <span>[ STREAM TARGET ]</span>
+            </div>
+            <div class="panel-content">
+                <div class="meta-box">
+                    <span class="meta-label">SOURCE PROTOCOL</span>
+                    <span class="meta-val">WebRTC DataChannel / HTTPS</span>
+                </div>
+                <div class="meta-box">
+                    <span class="meta-label">TARGET ENDPOINT</span>
+                    <span class="meta-val">185.136.92.16 (PL-CYBERGROTA)</span>
+                </div>
+                <div class="meta-box">
+                    <span class="meta-label">ENCODING / ENCRYPTION</span>
+                    <span class="meta-val" style="color: var(--vortex-yellow);">DTLS / SCTP -> RAW BINARY</span>
+                </div>
+
+                <button class="btn" id="startBtn" onclick="startCapture()">1. BEGIN PACKET CAPTURE</button>
+                <button class="btn btn-alert" id="analyzeBtn" onclick="analyzeHex()" disabled>2. RUN HEURISTIC ANALYSIS</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ MEMORY DUMP / HEXADECIMAL ]</span>
+                <span style="color: var(--vortex-success);">OFFSET: 0x00000000</span>
+            </div>
+            <div class="hex-viewer">
+                <div class="hex-col" id="col-addr">
+                    <div class="hex-header">OFFSET</div>
+                </div>
+                <div class="hex-col" id="col-hex">
+                    <div class="hex-header">00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F</div>
+                </div>
+                <div class="hex-col" id="col-ascii">
+                    <div class="hex-header">DECODED ASCII</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel terminal-panel">
+            <div class="panel-header">
+                <span>> DPI TELEMETRY TERMINAL</span>
+            </div>
+            <div class="term-output" id="terminal">
+<span class="log-time">[SYS]</span> Deep-Packet Inspection engine geladen.
+<span class="log-time">[SYS]</span> Wachtend op initialisatie van de netwerk-tap (NIC promiscuous mode gesimuleerd)...
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const colAddr = document.getElementById('col-addr');
+        const colHex = document.getElementById('col-hex');
+        const colAscii = document.getElementById('col-ascii');
+        const startBtn = document.getElementById('startBtn');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const captureStatus = document.getElementById('capture-status');
+
+        let hexLines = [];
+        let asciiLines = [];
+
+        function getLogTime() {
+            const d = new Date();
+            return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}.${d.getMilliseconds().toString().padStart(3,'0')}]`;
+        }
+
+        function logTerminal(message, cssClass) {
+            terminal.innerHTML += `\n<span class="log-time">${getLogTime()}</span> <span class="${cssClass}">${message}</span>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function toHex(str) {
+            let hex = '';
+            for(let i=0; i<str.length; i++) {
+                hex += '' + str.charCodeAt(i).toString(16).padStart(2, '0');
+            }
+            return hex;
+        }
+
+        const rawPayloads = [
+            "GET /api/v1/dossier HTTP/1.1  ",
+            "Host: rpc.filebase.io         ",
+            "Authorization: Bearer 8BE5C2..",
+            "User-Agent: PostmanRuntime/7.3",
+            "Accept: */* ",
+            "X-Target-IP: 185.136.92.16    ",
+            "                              ",
+            "PK\\x03\\x04\\n\\x00\\x00\\x00\\x00\\x00woo-braba",
+            "nt_export.zip\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00",
+            "\\x50\\x45\\x4e\\x54\\x41\\x47\\x52\\x49\\x44\\x5f\\x4c\\x4f",
+            "G_MATCH: Shell_KvK_24103138   ",
+            "\\x00\\x00\\x00\\x00END_OF_STREAM\\x00\\x00\\x00\\x00\\x00"
+        ];
+
+        function startCapture() {
+            startBtn.disabled = true;
+            captureStatus.innerText = "CAPTURING PACKETS...";
+            captureStatus.style.color = "var(--vortex-alert)";
+            captureStatus.style.borderColor = "var(--vortex-alert)";
+            captureStatus.style.background = "rgba(255, 0, 60, 0.1)";
+
+            logTerminal(`[SYS] Attaching to virtual network interface (veth0)...`, 'log-sys');
+            logTerminal(`[SYS] Listening for incoming SCTP frames on WebRTC channel...`, 'log-sys');
+
+            let lineCount = 0;
+            const captureInterval = setInterval(() => {
+                if (lineCount >= rawPayloads.length) {
+                    clearInterval(captureInterval);
+                    logTerminal(`[+] Capture buffer full (12 frames intercepted).`, 'log-succ');
+                    analyzeBtn.disabled = false;
+                    captureStatus.innerText = "BUFFER FULL - AWAITING ANALYSIS";
+                    return;
+                }
+
+                const offset = (lineCount * 16).toString(16).padStart(8, '0');
+                const asciiText = rawPayloads[lineCount];
+                
+                // Construct Hex
+                let hexStr = "";
+                for(let i=0; i<asciiText.length; i++) {
+                    const charCode = asciiText.charCodeAt(i);
+                    // simple hex gen logic, replace non-printables roughly
+                    if(asciiText.substr(i, 2) === '\\x') {
+                        hexStr += asciiText.substr(i+2, 2) + " ";
+                        i+=3;
+                    } else {
+                        hexStr += charCode.toString(16).padStart(2, '0') + " ";
+                    }
+                    if (i === 7) hexStr += " "; // middle gap
+                }
+
+                // Clean ASCII for display (replace non-printables with dot)
+                let displayAscii = asciiText.replace(/\\x[0-9a-fA-F]{2}/g, '.').replace(/[\x00-\x1F\x7F-\x9F]/g, '.');
+
+                // Render to DOM
+                colAddr.innerHTML += `<div>${offset}</div>`;
+                
+                // Add unique IDs for highlighting later
+                colHex.innerHTML += `<div id="hex-line-${lineCount}" class="hex-data">${hexStr.toUpperCase().padEnd(49, ' ')}</div>`;
+                colAscii.innerHTML += `<div id="ascii-line-${lineCount}" class="ascii-data">${displayAscii}</div>`;
+
+                lineCount++;
+            }, 300);
+        }
+
+        function analyzeHex() {
+            analyzeBtn.disabled = true;
+            logTerminal(`[SYS] Running Heuristic Pattern Matching on Hex Buffer...`, 'log-sys');
+            
+            setTimeout(() => {
+                logTerminal(`[!] PATTERN MATCH: 'Bearer Token' detected at offset 0x00000020`, 'log-err');
+                document.getElementById('hex-line-2').innerHTML = document.getElementById('hex-line-2').innerHTML.replace(/38 42 45 35 43 32/i, '<span class="highlight-critical">38 42 45 35 43 32</span>');
+                document.getElementById('ascii-line-2').innerHTML = document.getElementById('ascii-line-2').innerHTML.replace(/8BE5C2/, '<span class="highlight-critical">8BE5C2</span>');
+            }, 1000);
+
+            setTimeout(() => {
+                logTerminal(`[!] PATTERN MATCH: 'Target IP' detected at offset 0x00000050`, 'log-warn');
+                document.getElementById('hex-line-5').innerHTML = document.getElementById('hex-line-5').innerHTML.replace(/31 38 35 2E 31 33 36 2E 39 32 2E 31 36/i, '<span class="highlight">31 38 35 2E 31 33 36 2E 39 32 2E 31 36</span>');
+                document.getElementById('ascii-line-5').innerHTML = document.getElementById('ascii-line-5').innerHTML.replace(/185\.136\.92\.16/, '<span class="highlight">185.136.92.16</span>');
+            }, 2000);
+
+            setTimeout(() => {
+                logTerminal(`[!] PATTERN MATCH: 'File Header (ZIP)' detected at offset 0x00000070`, 'log-succ');
+                document.getElementById('hex-line-7').innerHTML = document.getElementById('hex-line-7').innerHTML.replace(/50 4B 03 04/i, '<span class="highlight-critical">50 4B 03 04</span>');
+                document.getElementById('ascii-line-7').innerHTML = document.getElementById('ascii-line-7').innerHTML.replace(/PK\.\./, '<span class="highlight-critical">PK..</span>');
+                
+                logTerminal(`[+] ANALYSIS COMPLETE. Target infrastructure is actively leaking data packets containing credentials and zip archives over the P2P channel.`, 'log-succ');
+                captureStatus.innerText = "ANALYSIS COMPLETE";
+                captureStatus.style.color = "var(--vortex-success)";
+                captureStatus.style.borderColor = "var(--vortex-success)";
+                captureStatus.style.background = "rgba(0, 255, 0, 0.1)";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

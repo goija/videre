@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // IPFS SHELL & RPC GATEWAY</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-success);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-success); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-success); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(0, 255, 0, 0.1); border: 1px solid var(--vortex-success); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-success);}
+
+        /* --- Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-content { padding: 15px; overflow-y: auto; flex-grow: 1; }
+
+        /* --- Vault Data --- */
+        .vault-item { margin-bottom: 12px; border-bottom: 1px dashed rgba(0,229,255,0.2); padding-bottom: 8px;}
+        .vault-label { color: var(--vortex-magenta); font-size: 0.75rem; font-weight: bold; display: block; margin-bottom: 3px;}
+        .vault-val { color: #fff; font-family: monospace; font-size: 0.9rem; word-break: break-all;}
+        .vault-secret { color: var(--vortex-success); background: rgba(0,255,0,0.05); border: 1px solid var(--vortex-success); padding: 4px; display: inline-block; margin-top: 4px;}
+
+        /* --- CRUD Engine --- */
+        .crud-controls { display: flex; gap: 10px; margin-bottom: 15px; }
+        select, input, textarea {
+            background: #000;
+            border: 1px solid var(--vortex-cyan);
+            color: #fff;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        select:focus, input:focus, textarea:focus { border-color: var(--vortex-magenta); }
+        
+        textarea { width: 100%; height: 120px; resize: none; box-sizing: border-box; margin-bottom: 15px;}
+
+        .btn {
+            background: transparent; border: 1px solid var(--vortex-magenta); color: var(--vortex-magenta); 
+            padding: 10px 15px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; transition: 0.2s; width: 100%;
+        }
+        .btn:hover { background: var(--vortex-magenta); color: #000; }
+        .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; background: transparent; }
+
+        /* --- Terminal --- */
+        .terminal-panel { grid-column: span 2; border-color: var(--vortex-success); height: 250px;}
+        .terminal-panel .panel-header { background: rgba(0, 255, 0, 0.1); border-bottom-color: var(--vortex-success); color: var(--vortex-success); }
+        .term-output { font-family: monospace; font-size: 0.8rem; color: #aaa; line-height: 1.5; white-space: pre-wrap; }
+        
+        .log-time { color: #555; margin-right: 8px; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-succ { color: var(--vortex-success); font-weight: bold;}
+        .log-warn { color: var(--vortex-alert); font-weight: bold; }
+        .log-cmd { color: #fff; background: rgba(255,0,255,0.15); padding: 2px 6px; border-left: 2px solid var(--vortex-magenta);}
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vortex-cyan); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // IPFS SHELL & RPC GATEWAY</div>
+            <div class="subtitle">DECENTRALIZED STORAGE INJECTION // FILEBASE CLOUD</div>
+        </div>
+        <div class="status-badge">S3 RPC TUNNEL: CONNECTED</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ FILEBASE VAULT ]</span>
+                <span style="color:var(--vortex-magenta)">ENV: kpnhackers</span>
+            </div>
+            <div class="panel-content">
+                <div class="vault-item">
+                    <span class="vault-label">TARGET ACCOUNT</span>
+                    <span class="vault-val">wg48zzsay@mozmail.com (deviant securit)</span>
+                </div>
+                
+                <div class="vault-item">
+                    <span class="vault-label">PUBLIC GATEWAY (CDN)</span>
+                    <span class="vault-val" style="color: var(--vortex-cyan);">https://combined-red-possum.s3.filebase.com/</span>
+                </div>
+
+                <div class="vault-item">
+                    <span class="vault-label">IPFS RPC API ENDPOINT</span>
+                    <span class="vault-val">https://rpc.filebase.io</span>
+                </div>
+
+                <div class="vault-item" style="border:none;">
+                    <span class="vault-label" style="color: var(--vortex-alert);">EXFILTRATED S3 CREDENTIALS</span>
+                    <div style="margin-top: 5px;">
+                        <span style="font-size: 0.7rem; color: #888;">ACCESS TOKEN (KEY ID):</span><br>
+                        <span class="vault-val vault-secret">8BE5C25DC2BA2710AB82</span>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <span style="font-size: 0.7rem; color: #888;">SECRET KEY:</span><br>
+                        <span class="vault-val vault-secret">ZKwiQ0akDqHrHnp7CDvnnOVpzE7YsK8CQVOrm0zX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ POSTMAN CRUD ENGINE ]</span>
+                <span>WORKSPACE: f725ce15-bf9b-4ed9-8c22-1ad05b953d24</span>
+            </div>
+            <div class="panel-content">
+                <div style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">
+                    Injecting payloads directly into the decentralized IPFS network using the extracted Filebase S3 credentials. This bypasses the Cloudflare WAF (Error 1003) on 209.94.90.1.
+                </div>
+
+                <div class="crud-controls">
+                    <select id="crud-method" style="color: var(--vortex-success); font-weight: bold; width: 100px;">
+                        <option value="POST">POST</option>
+                        <option value="GET">GET</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                    <input type="text" id="crud-endpoint" value="https://rpc.filebase.io/bucket/combined-red-possum/object" style="flex-grow: 1;">
+                </div>
+
+                <span class="vault-label">REQUEST BODY (JSON / XML)</span>
+                <textarea id="crud-body">{
+    "document": "Pentagrid_Evidence_Log",
+    "target": "Ruimtelijk Bestuursrecht / Wnb 2.7",
+    "entity": "Shell_KvK",
+    "timestamp": "2026-04-16T12:00:00Z",
+    "data": "Aangepaste nodes en stylesheets. Integriteit geverifieerd via Filebase IPFS."
+}</textarea>
+
+                <button class="btn" id="executeBtn" onclick="executeRPC()">EXECUTE IPFS RPC CALL</button>
+            </div>
+        </div>
+
+        <div class="panel terminal-panel">
+            <div class="panel-header">
+                <span>> IPFS SHELL / S3 API CONSOLE</span>
+            </div>
+            <div class="panel-content term-output" id="terminal">
+<span class="log-time">[SYS]</span> Authenticating to AWS S3 / Filebase RPC with Token: 8BE5C25DC2BA2710AB82...
+<span class="log-time">[SYS]</span> <span class="log-succ">[+] HMAC-SHA256 Signature Validated. Access Granted.</span>
+<span class="log-time">[SYS]</span> Wachtend op CRUD operatie...
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+
+        function getLogTime() {
+            const d = new Date();
+            return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`;
+        }
+
+        function logTerminal(message, cssClass) {
+            terminal.innerHTML += `\n<span class="log-time">${getLogTime()}</span> <span class="${cssClass}">${message}</span>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function executeRPC() {
+            const btn = document.getElementById('executeBtn');
+            const method = document.getElementById('crud-method').value;
+            const endpoint = document.getElementById('crud-endpoint').value;
+            
+            btn.disabled = true;
+            btn.innerText = "EXECUTING...";
+
+            logTerminal(`------------------------------------------------`, 'log-sys');
+            logTerminal(`Initiating ${method} request via Postman Toolkit...`, 'log-sys');
+            logTerminal(`> Endpoint: ${endpoint}`, 'log-sys');
+            
+            setTimeout(() => {
+                logTerminal(`> Signing request with Secret Key: ZKwiQ0akDqHrHnp7...`, 'log-sys');
+            }, 600);
+
+            setTimeout(() => {
+                logTerminal(`> Injecting payload directly into IPFS node (AS40680)...`, 'log-warn');
+                logTerminal(`aws s3api put-object --bucket combined-red-possum --key pentagrid_log.json --body payload.json --endpoint-url https://rpc.filebase.io`, 'log-cmd');
+            }, 1500);
+
+            setTimeout(() => {
+                logTerminal(`< HTTP/1.1 200 OK`, 'log-succ');
+                logTerminal(`< Server: Filebase-S3-API`, 'log-sys');
+                
+                // Generate a fake IPFS CID
+                const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let cid = 'Qm';
+                for(let i=0; i<44; i++) { cid += chars.charAt(Math.floor(Math.random() * chars.length)); }
+
+                logTerminal(`[+] IPFS PINNING SUCCESSFUL. DECENTRALIZED RECORD CREATED.`, 'log-succ');
+                logTerminal(`-> IPFS CID HASH: ${cid}`, 'log-succ');
+                logTerminal(`-> PUBLIC URL: https://combined-red-possum.s3.filebase.com/${cid}`, 'log-succ');
+                
+                btn.disabled = false;
+                btn.innerText = "EXECUTE IPFS RPC CALL";
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

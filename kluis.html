@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // PACKET CARVER</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.9);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--vortex-magenta);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .panel {
+            border: 1px solid var(--vortex-border);
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background: rgba(255, 0, 255, 0.1);
+            padding: 10px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--vortex-border);
+        }
+
+        .stream-view {
+            padding: 15px;
+            font-size: 0.85rem;
+            color: #888;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .highlight-match { color: var(--vortex-success); font-weight: bold; background: rgba(0, 255, 0, 0.1); }
+        .highlight-header { color: var(--vortex-magenta); font-weight: bold; }
+
+        .archive-box {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .zip-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px var(--vortex-cyan);
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--vortex-cyan);
+            color: var(--vortex-cyan);
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn:hover { background: var(--vortex-cyan); color: #000; box-shadow: 0 0 20px var(--vortex-cyan); }
+
+        .terminal {
+            background: #000;
+            color: #aaa;
+            padding: 15px;
+            font-size: 0.8rem;
+            height: 150px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid var(--vortex-success);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <div style="font-size: 1.5rem; font-weight: bold;">VORTEX // PACKET CARVER v26.5</div>
+        <div style="color: var(--vortex-magenta); font-size: 0.8rem;">DEEP PACKET INSPECTION & RECONSTRUCTION</div>
+    </div>
+    <div style="text-align: right;">
+        <div style="font-size: 0.8rem;">STREAM: 185.136.92.16</div>
+        <div style="color: var(--vortex-success);">IDENTIFIED: ZIP ARCHIVE</div>
+    </div>
+</header>
+
+<div class="grid-container">
+    <div class="panel">
+        <div class="panel-header">[ RAW DATA INTERCEPT ]</div>
+        <div class="stream-view">
+GET /api/v1/dossier HTTP/1.1  
+Host: rpc.filebase.io         
+Authorization: Bearer 8BE5C2..
+User-Agent: PostmanRuntime/7.3
+<span class="highlight-header">PK..</span>\n.....woo-braba
+nt_export.zip........
+............
+<span class="highlight-match">G_MATCH: Shell_KvK_24103138</span>   
+....END_OF_STREAM....
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header">[ ARCHIVE RECONSTRUCTION ]</div>
+        <div class="archive-box">
+            <div class="zip-icon">📦</div>
+            <div style="margin-bottom: 10px; font-weight: bold;">woo-brabant_export.zip</div>
+            <div style="color: #666; font-size: 0.8rem; margin-bottom: 30px;">
+                Detected internal file: <strong>PENTAGRID_LOG_MATCH.json</strong><br>
+                Status: Encrypted (S3-managed-key)
+            </div>
+            <button class="btn" onclick="carveData()">Carve & Extract Payload</button>
+        </div>
+    </div>
+</div>
+
+<div class="terminal" id="term">
+[SYS] Analyseren van inkomende frames...
+[SYS] Patroonherkenning voltooid: Shell_KvK metadata gedetecteerd.
+</div>
+
+<script>
+    function carveData() {
+        const term = document.getElementById('term');
+        const logs = [
+            "Initiëren van Packet Carving sequence...",
+            "Extraheren van binaire blokken vanaf offset 0x00000040...",
+            "Valideren van ZIP-structuur integriteit...",
+            "Match gevonden: Shell_KvK_24103138 geassocieerd met dossier PENTAGRID-BRABANT-01.",
+            "[+] SUCCESS: woo-brabant_export.zip veiliggesteld in lokale kluis.",
+            "[SYS] Automatische decryptie van PENTAGRID_LOG_MATCH.json gestart..."
+        ];
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < logs.length) {
+                term.innerHTML += `\n[${new Date().toLocaleTimeString()}] ${logs[i]}`;
+                term.scrollTop = term.scrollHeight;
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 800);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // OSINT LINK ANALYZER</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .title { font-size: 1.4rem; color: #fff; text-shadow: 0 0 8px var(--vortex-cyan); font-weight: bold; letter-spacing: 1px;}
+        .subtitle { font-size: 0.8rem; color: var(--vortex-magenta); text-transform: uppercase; margin-top: 5px; }
+        .status-badge { background: rgba(0, 229, 255, 0.1); border: 1px solid var(--vortex-cyan); padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--vortex-cyan);}
+
+        /* --- Layout --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--vortex-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--vortex-border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .panel-content {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* --- Link Data --- */
+        .url-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px dashed var(--vortex-cyan);
+            padding: 15px;
+            font-family: monospace;
+            color: #fff;
+            word-break: break-all;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .param-list { display: flex; flex-direction: column; gap: 8px; }
+        .param-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--vortex-magenta);
+            padding: 10px;
+            display: none; /* Verborgen tot scan */
+            animation: slideIn 0.4s ease-out forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .param-key { color: var(--vortex-cyan); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
+        .param-val { color: #fff; font-family: monospace; font-size: 0.9rem; margin-top: 3px; word-break: break-all; }
+        .param-note { color: var(--vortex-success); font-size: 0.7rem; margin-top: 3px; font-weight: bold; }
+        .param-note.alert { color: var(--vortex-alert); }
+
+        /* --- Terminal --- */
+        .terminal-panel { grid-column: span 2; border-color: var(--vortex-magenta); height: 250px;}
+        .terminal-panel .panel-header { background: rgba(255, 0, 255, 0.1); border-bottom-color: var(--vortex-magenta); color: var(--vortex-magenta); }
+        .term-output { font-family: monospace; font-size: 0.8rem; color: #aaa; line-height: 1.6; white-space: pre-wrap; }
+        
+        .log-time { color: #555; margin-right: 8px; }
+        .log-sys { color: var(--vortex-cyan); }
+        .log-succ { color: var(--vortex-success); font-weight: bold;}
+        .log-warn { color: var(--vortex-alert); font-weight: bold; }
+        .log-highlight { color: #fff; background: rgba(255,0,255,0.2); padding: 0 4px; }
+
+        .btn {
+            background: transparent; border: 1px solid var(--vortex-cyan); color: var(--vortex-cyan); 
+            padding: 12px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; transition: 0.2s;
+            width: 100%; margin-bottom: 20px; font-size: 0.9rem;
+        }
+        .btn:hover { background: var(--vortex-cyan); color: #000; }
+        .btn:disabled { border-color: #555; color: #555; cursor: not-allowed; background: transparent; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--vortex-border); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vortex-cyan); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <div class="title">VORTEX OMNI-BRIDGE v26.5 // URL PAYLOAD EXTRACTOR</div>
+            <div class="subtitle">TARGET: x.com (Twitter) // TYPE: ACCOUNT RECOVERY</div>
+        </div>
+        <div class="status-badge">PAYLOAD INTERCEPTED</div>
+    </header>
+
+    <div class="grid-container">
+        
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ RAW INTERCEPTED URL ]</span>
+            </div>
+            <div class="panel-content">
+                <button class="btn" id="startBtn" onclick="startAnalysis()">START TOKEN ANALYSE</button>
+                
+                <span style="color: var(--vortex-magenta); font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; display: block;">INJECTED STRING:</span>
+                <div class="url-box" id="rawUrl">
+                    https://x.com/account/confirm_email_reset?reset_type=e&user_id=10408572&token=uS8VYgPgK!jvYuh!3gqW2jqKHGPnm3IZt780B2AAUnQ%3D-1560245642978&confirm_pending_email=0&token_version=0&password_reset_cause=user&cn=cGFzc3dvcmRfcmVzZXRfdjI%3D
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span>[ DECRYPTED PARAMETERS ]</span>
+            </div>
+            <div class="panel-content">
+                <div class="param-list">
+                    
+                    <div class="param-item" id="param-target">
+                        <div class="param-key">Endpoint Target</div>
+                        <div class="param-val">/account/confirm_email_reset</div>
+                        <div class="param-note">Doel: Account Herstel / E-mail Bevestiging</div>
+                    </div>
+
+                    <div class="param-item" id="param-uid">
+                        <div class="param-key">Target User ID (user_id)</div>
+                        <div class="param-val">10408572</div>
+                        <div class="param-note">Status: Ouder Twitter ID (vroege registratie)</div>
+                    </div>
+
+                    <div class="param-item" id="param-token">
+                        <div class="param-key">Security Token & Epoch Timestamp</div>
+                        <div class="param-val">...UnQ=-1560245642978</div>
+                        <div class="param-note alert">UNIX Epoch Decode: 11 Juni 2019, 09:34:02 UTC</div>
+                    </div>
+
+                    <div class="param-item" id="param-cn">
+                        <div class="param-key">Base64 Encoded Variable (cn)</div>
+                        <div class="param-val">cGFzc3dvcmRfcmVzZXRfdjI=</div>
+                        <div class="param-note">Decoded: password_reset_v2</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel terminal-panel">
+            <div class="panel-header">
+                <span>> FORENSIC PARSER LOG</span>
+            </div>
+            <div class="panel-content term-output" id="terminal">
+<span class="log-time">[SYS]</span> VORTEX URL Parser geladen.
+<span class="log-time">[SYS]</span> Wachtend op executie...
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+
+        function getLogTime() {
+            const d = new Date();
+            return `[${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}]`;
+        }
+
+        function logTerminal(message, cssClass) {
+            terminal.innerHTML += `\n<span class="log-time">${getLogTime()}</span> <span class="${cssClass}">${message}</span>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function startAnalysis() {
+            const btn = document.getElementById('startBtn');
+            btn.disabled = true;
+            btn.innerText = "ANALYSING PAYLOAD...";
+            
+            document.getElementById('rawUrl').style.borderColor = "var(--vortex-success)";
+
+            logTerminal(`------------------------------------------------`, 'log-sys');
+            logTerminal(`[SYS] Stripping base URL and extracting query string...`, 'log-sys');
+
+            setTimeout(() => {
+                logTerminal(`[+] Endpoint gedetecteerd: X.com Password/Email Reset`, 'log-succ');
+                document.getElementById('param-target').style.display = 'block';
+            }, 800);
+
+            setTimeout(() => {
+                logTerminal(`[SYS] Scanning parameters...`, 'log-sys');
+                logTerminal(`[+] Extracted Target ID: 10408572`, 'log-succ');
+                document.getElementById('param-uid').style.display = 'block';
+            }, 1800);
+
+            setTimeout(() => {
+                logTerminal(`[SYS] Splitting security token to find expiration epoch...`, 'log-sys');
+                logTerminal(`[!] WAARSCHUWING: Historische timestamp gedetecteerd (1560245642978).`, 'log-warn');
+                logTerminal(`-> Datum omgezet naar: 11-06-2019. Token is verlopen.`, 'log-highlight');
+                document.getElementById('param-token').style.display = 'block';
+            }, 3000);
+
+            setTimeout(() => {
+                logTerminal(`[SYS] Detecting Base64 encoding in parameter 'cn'...`, 'log-sys');
+                logTerminal(`[+] Decoded payload: "password_reset_v2"`, 'log-succ');
+                document.getElementById('param-cn').style.display = 'block';
+            }, 4200);
+
+            setTimeout(() => {
+                logTerminal(`------------------------------------------------`, 'log-sys');
+                logTerminal(`[SYS] URL Analyse voltooid. Data opgeslagen in VORTEX cache.`, 'log-sys');
+                btn.innerText = "ANALYSE VOLTOOID";
+                btn.style.borderColor = "var(--vortex-success)";
+                btn.style.color = "var(--vortex-success)";
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX CORE // DEFENSIVE PROTOCOL</title>
+    <style>
+        :root {
+            --bg: #030303;
+            --cyan: #00e5ff;
+            --cyan-dim: #005555;
+            --magenta: #ff00ff;
+            --green: #00ff33;
+            --red: #ff3333;
+            --yellow: #ffcc00;
+            --gray: #222222;
+            --text-main: #dddddd;
+            --text-dim: #888888;
+            --font-main: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--cyan-dim);
+            padding-bottom: 15px;
+        }
+
+        .title-main { font-size: 24px; font-weight: bold; color: var(--cyan); text-shadow: 0 0 10px rgba(0,229,255,0.5); letter-spacing: 2px; }
+        .subtitle { color: var(--yellow); font-size: 12px; margin-top: 5px; letter-spacing: 1px; text-shadow: 0 0 5px rgba(255,204,0,0.5); }
+        
+        .status-badge { 
+            color: var(--green); border: 1px solid var(--green); padding: 6px 15px; font-size: 12px; 
+            box-shadow: 0 0 8px rgba(0,255,51,0.3); text-transform: uppercase; font-weight: bold;
+        }
+
+        /* Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            border: 1px solid var(--cyan-dim);
+            background: linear-gradient(180deg, rgba(0, 15, 15, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background-color: rgba(0, 85, 85, 0.15);
+            padding: 12px 15px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--cyan);
+            border-bottom: 1px solid var(--cyan-dim);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel-header.warning { color: var(--yellow); border-bottom-color: rgba(255,204,0,0.3); background-color: rgba(85, 85, 0, 0.1); }
+        .panel-header.action { color: var(--green); border-bottom-color: rgba(0,255,51,0.3); background-color: rgba(0, 85, 0, 0.1); }
+
+        .panel-content {
+            padding: 20px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Typography & Elements */
+        h3 { color: var(--cyan); font-size: 14px; margin-top: 0; margin-bottom: 10px; border-bottom: 1px dashed var(--gray); padding-bottom: 5px; }
+        
+        ul { padding-left: 20px; margin-top: 5px; }
+        li { margin-bottom: 8px; color: var(--text-dim); }
+        li strong { color: var(--text-main); }
+
+        /* Matrix Table */
+        .risk-matrix { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px; }
+        .risk-matrix th { text-align: left; padding: 8px; color: var(--cyan); border-bottom: 1px solid var(--cyan-dim); background: rgba(0,255,255,0.05); }
+        .risk-matrix td { padding: 8px; border-bottom: 1px dashed var(--gray); }
+        .risk-high { color: var(--red); font-weight: bold; text-shadow: 0 0 5px var(--red); }
+        .risk-med { color: var(--yellow); }
+
+        /* Terminal Code Blocks */
+        .terminal-block {
+            background: #000;
+            border: 1px solid var(--gray);
+            border-left: 3px solid var(--green);
+            padding: 12px;
+            margin-bottom: 20px;
+            font-family: var(--font-main);
+            font-size: 12px;
+            color: var(--green);
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        
+        .terminal-comment { color: var(--text-dim); font-style: italic; }
+        .terminal-cmd { color: var(--cyan); }
+
+        .highlight-text { color: var(--magenta); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <div class="title-main">VORTEX CORE // BLUE TEAM DEFENSIVE PROTOCOL</div>
+        <div class="subtitle">STATUS: VULNERABILITY REMEDIATION INITIATED // TARGET: 52.101.68.15</div>
+    </div>
+    <div class="status-badge">SECURE & HARDEN</div>
+</header>
+
+<div class="container">
+    <div class="panel">
+        <div class="panel-header warning">
+            <span>> RISK ASSESSMENT & IMMEDIATE ACTIONS</span>
+            <span style="color:var(--text-dim); font-size:11px;">PRIORITY: CRITICAL</span>
+        </div>
+        <div class="panel-content">
+            <h3>PORT EXPOSURE MATRIX</h3>
+            <table class="risk-matrix">
+                <tr>
+                    <th>Port</th><th>Service</th><th>Exposure</th><th>Risk Level</th><th>Action Required</th>
+                </tr>
+                <tr>
+                    <td>80</td><td>HTTP</td><td>Public</td><td class="risk-med">Low-Med</td><td>Redirect to HTTPS; implement rate limits.</td>
+                </tr>
+                <tr>
+                    <td>443</td><td>HTTPS</td><td>Public</td><td class="risk-med">Low-Med</td><td>Keep TLS current; add fail2ban.</td>
+                </tr>
+                <tr>
+                    <td><span class="risk-high">3306</span></td><td><span class="risk-high">MySQL</span></td><td><span class="risk-high">Public</span></td><td class="risk-high">HIGH</td><td>Close to internet immediately; restrict to localhost.</td>
+                </tr>
+                <tr>
+                    <td>30120</td><td>CFX/FiveM</td><td>Public</td><td style="color:var(--green)">Intended</td><td>Keep updated; DDoS mitigation.</td>
+                </tr>
+            </table>
+
+            <br>
+            <h3>IMMEDIATE LOCKDOWN PROTOCOL</h3>
+            <ul>
+                <li><strong>Lock down MySQL (3306):</strong> Configureer je firewall zodat poort 3306 alleen toegankelijk is vanaf vertrouwde IP's. Pas de <code>bind-address</code> aan naar <code>127.0.0.1</code>.</li>
+                <li><strong>Default-deny firewall:</strong> Blokkeer al het inkomende verkeer. Zet alleen 80, 443 en 30120 expliciet open. SSH (22) uitsluitend via statisch IP/VPN.</li>
+                <li><strong>Patch & Auditeer:</strong> Update OS en services. Verifieer actieve listeners via de command line.</li>
+            </ul>
+
+            <br>
+            <h3>FIVEM/CFX HARDENING CHECKLIST</h3>
+            <ul>
+                <li>Draai serverprocessen als een <span class="highlight-text">non-root</span> gebruiker.</li>
+                <li>Scherm admin-panelen (txAdmin) af via VPN of IP-allowlist.</li>
+                <li>Implementeer rate limiting op host-niveau.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header action">
+            <span>> REMEDIATION SHELL COMMANDS (UBUNTU/DEBIAN)</span>
+            <span style="color:var(--text-dim); font-size:11px;">EXECUTE AS ROOT/SUDO</span>
+        </div>
+        <div class="panel-content">
+            
+            <h3>1. VERIFY ACTIVE LISTENERS</h3>
+            <div class="terminal-block">
+<span class="terminal-cmd">sudo</span> ss -lntp
+<span class="terminal-cmd">sudo</span> lsof -i -P -n | egrep ':(80|443|3306|30120)\b'</div>
+
+            <h3>2. UFW FIREWALL CONFIGURATION</h3>
+            <div class="terminal-block">
+<span class="terminal-comment"># Set default policies</span>
+<span class="terminal-cmd">sudo</span> ufw default deny incoming
+<span class="terminal-cmd">sudo</span> ufw default allow outgoing
+
+<span class="terminal-comment"># Allow intended public services</span>
+<span class="terminal-cmd">sudo</span> ufw allow 80/tcp
+<span class="terminal-cmd">sudo</span> ufw allow 443/tcp
+<span class="terminal-cmd">sudo</span> ufw allow 30120/tcp
+<span class="terminal-cmd">sudo</span> ufw allow 30120/udp
+
+<span class="terminal-comment"># Secure MySQL & SSH (Replace X.X.X.X with your IP)</span>
+<span class="terminal-cmd">sudo</span> ufw deny 3306/tcp
+<span class="terminal-cmd">sudo</span> ufw allow from <span class="highlight-text">X.X.X.X</span> to any port 3306 proto tcp
+<span class="terminal-cmd">sudo</span> ufw allow from <span class="highlight-text">X.X.X.X</span> to any port 22 proto tcp
+
+<span class="terminal-comment"># Enable firewall</span>
+<span class="terminal-cmd">sudo</span> ufw enable
+<span class="terminal-cmd">sudo</span> ufw status verbose</div>
+
+            <h3>3. SECURE MYSQL BIND ADDRESS</h3>
+            <div class="terminal-block">
+<span class="terminal-comment"># Find config file</span>
+<span class="terminal-cmd">grep</span> -R "bind-address" -n /etc/mysql /etc/my.cnf 2>/dev/null
+
+<span class="terminal-comment"># Edit config to look like this:</span>
+bind-address = 127.0.0.1
+
+<span class="terminal-comment"># Restart service</span>
+<span class="terminal-cmd">sudo</span> systemctl restart mysql</div>
+
+            <h3>4. EXTERNAL VERIFICATION TEST</h3>
+            <div class="terminal-block">
+<span class="terminal-comment"># Run from an external machine (not allowlisted):</span>
+<span class="terminal-cmd">nc</span> -vz 52.101.68.15 3306
+<span class="terminal-comment">> Expected result: Connection timed out / Refused.</span></div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
