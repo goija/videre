@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VORTEX v26.6 // SYSTEM SITEMAP</title>
+    <title>VORTEX v26.6 // SYSTEM SITEMAP (LINKED)</title>
     <style>
         :root {
             --vortex-cyan: #00e5ff;
@@ -44,19 +44,31 @@
         li { margin-bottom: 6px; display: flex; align-items: center; }
         li::before { content: "►"; color: var(--vortex-magenta); margin-right: 10px; font-size: 0.8rem; }
         
-        .file-name { color: var(--vortex-cyan); text-decoration: none; transition: 0.2s;}
-        .file-name:hover { color: #fff; text-shadow: 0 0 5px var(--vortex-cyan); cursor: pointer; }
+        /* Hyperlink Styling */
+        a.file-name { 
+            color: var(--vortex-cyan); 
+            text-decoration: none; 
+            transition: 0.2s;
+            border-bottom: 1px solid transparent;
+        }
+        a.file-name:hover { 
+            color: #fff; 
+            text-shadow: 0 0 8px var(--vortex-cyan); 
+            border-bottom: 1px solid var(--vortex-cyan);
+        }
+        
+        a.alert-file { color: var(--vortex-alert); }
+        a.alert-file:hover { color: #fff; text-shadow: 0 0 8px var(--vortex-alert); border-bottom-color: var(--vortex-alert); }
         
         .desc { color: #888; font-size: 0.85rem; margin-left: 10px; font-style: italic; }
-        .alert-file { color: var(--vortex-alert); }
 
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="title">VORTEX OMNI-BRIDGE // SITEMAP</div>
-        <div class="subtitle">REPOSITORY: GOIJA/VIDERE | STATUS: INDEXED</div>
+        <div class="title">VORTEX OMNI-BRIDGE // INTERACTIVE SITEMAP</div>
+        <div class="subtitle">REPOSITORY: GOIJA/VIDERE | STATUS: ACTIVE LINKS</div>
     </div>
 
     <div class="directory">
@@ -64,56 +76,56 @@
         
         <div class="category-title">[ KERNBESTANDEN ]</div>
         <ul>
-            <li><span class="file-name">index.html</span> <span class="desc">(Hoofdpagina / Landing)</span></li>
-            <li><span class="file-name">README.md</span> <span class="desc">(Systeem Documentatie)</span></li>
+            <li><a href="index.html" class="file-name">index.html</a> <span class="desc">(Hoofdpagina / Landing)</span></li>
+            <li><a href="README.md" class="file-name">README.md</a> <span class="desc">(Systeem Documentatie)</span></li>
         </ul>
 
         <div class="category-title">[ DOSSIERS & ONDERZOEKEN ]</div>
         <ul>
-            <li><span class="file-name">andersomland.html</span> <span class="desc">(Hoofd Dossier)</span></li>
-            <li><span class="file-name">andersomland1.html</span></li>
-            <li><span class="file-name">andersomland2.html</span></li>
-            <li><span class="file-name">andersomland3.html</span></li>
-            <li><span class="file-name">sill.html</span> <span class="desc">(Secundair Target Dossier)</span></li>
-            <li><span class="file-name">sillly.html</span></li>
-            <li><span class="file-name">kluis.html</span> <span class="desc">(Bewijskluis / Database Interface)</span></li>
-            <li><span class="file-name">eindrapportage-module.html</span> <span class="desc">(Rapport Generator)</span></li>
-            <li><span class="file-name">judicial_submission.html</span> <span class="desc">(Juridische Export Formattering)</span></li>
+            <li><a href="andersomland.html" class="file-name">andersomland.html</a> <span class="desc">(Hoofd Dossier)</span></li>
+            <li><a href="andersomland1.html" class="file-name">andersomland1.html</a></li>
+            <li><a href="andersomland2.html" class="file-name">andersomland2.html</a></li>
+            <li><a href="andersomland3.html" class="file-name">andersomland3.html</a></li>
+            <li><a href="sill.html" class="file-name">sill.html</a> <span class="desc">(Secundair Target Dossier)</span></li>
+            <li><a href="sillly.html" class="file-name">sillly.html</a></li>
+            <li><a href="kluis.html" class="file-name">kluis.html</a> <span class="desc">(Bewijskluis / Database Interface)</span></li>
+            <li><a href="eindrapportage-module.html" class="file-name">eindrapportage-module.html</a> <span class="desc">(Rapport Generator)</span></li>
+            <li><a href="judicial_submission.html" class="file-name">judicial_submission.html</a> <span class="desc">(Juridische Export Formattering)</span></li>
         </ul>
 
         <div class="category-title">[ ANALYSETOOLS & SCANNERS ]</div>
         <ul>
-            <li><span class="file-name">woo.html</span> <span class="desc">(Wet Open Overheid Toolkit)</span></li>
-            <li><span class="file-name">cyberquota.html</span></li>
-            <li><span class="file-name">shodan_hostscan.html</span> <span class="desc">(Netwerk Reconnaissance)</span></li>
-            <li><span class="file-name">shell.html</span> <span class="desc">(Web Shell Interface)</span></li>
-            <li><span class="file-name">rest.html</span> <span class="desc">(API Testing)</span></li>
-            <li><span class="file-name">ipfs.html</span> <span class="desc">(Decentralized Storage)</span></li>
-            <li><span class="file-name">ipfs_shell.html</span></li>
+            <li><a href="woo.html" class="file-name">woo.html</a> <span class="desc">(Wet Open Overheid Toolkit)</span></li>
+            <li><a href="cyberquota.html" class="file-name">cyberquota.html</a></li>
+            <li><a href="shodan_hostscan.html" class="file-name">shodan_hostscan.html</a> <span class="desc">(Netwerk Reconnaissance)</span></li>
+            <li><a href="shell.html" class="file-name">shell.html</a> <span class="desc">(Web Shell Interface)</span></li>
+            <li><a href="rest.html" class="file-name">rest.html</a> <span class="desc">(API Testing)</span></li>
+            <li><a href="ipfs.html" class="file-name">ipfs.html</a> <span class="desc">(Decentralized Storage)</span></li>
+            <li><a href="ipfs_shell.html" class="file-name">ipfs_shell.html</a></li>
         </ul>
 
         <div class="category-title">[ VORTEX TACTISCHE MODULES ]</div>
         <ul>
-            <li><span class="file-name">vortex_api_probe.html</span></li>
-            <li><span class="file-name">vortex_asset_explorer.html</span></li>
-            <li><span class="file-name">vortex_boxo_explorer.html</span></li>
-            <li><span class="file-name">vortex_dns_enumerator.html</span></li>
-            <li><span class="file-name">vortex_evidence_log.html</span></li>
-            <li><span class="file-name">vortex_evidence_viewer.html</span></li>
-            <li><span class="file-name">vortex_hex_viewer.html</span> <span class="desc">(Binaire Analyse)</span></li>
-            <li><span class="file-name">vortex_ipfs_recon.html</span></li>
-            <li><span class="file-name">vortex_link_analyzer.html</span></li>
-            <li><span class="file-name">vortex_players_exfil.html</span></li>
-            <li><span class="file-name">vortex_postman_osint.html</span> <span class="desc">(API Bridge)</span></li>
-            <li><span class="file-name">vortex_target_185_136_92_16.html</span> <span class="desc">(Specifieke IP Target)</span></li>
-            <li><span class="file-name alert-file">vortex_target_videre10.html</span> <span class="desc">(Videre Blob Storage Infiltration)</span></li>
-            <li><span class="file-name">vortex_woo_brabant.html</span></li>
+            <li><a href="vortex_api_probe.html" class="file-name">vortex_api_probe.html</a></li>
+            <li><a href="vortex_asset_explorer.html" class="file-name">vortex_asset_explorer.html</a></li>
+            <li><a href="vortex_boxo_explorer.html" class="file-name">vortex_boxo_explorer.html</a></li>
+            <li><a href="vortex_dns_enumerator.html" class="file-name">vortex_dns_enumerator.html</a></li>
+            <li><a href="vortex_evidence_log.html" class="file-name">vortex_evidence_log.html</a></li>
+            <li><a href="vortex_evidence_viewer.html" class="file-name">vortex_evidence_viewer.html</a></li>
+            <li><a href="vortex_hex_viewer.html" class="file-name">vortex_hex_viewer.html</a> <span class="desc">(Binaire Analyse)</span></li>
+            <li><a href="vortex_ipfs_recon.html" class="file-name">vortex_ipfs_recon.html</a></li>
+            <li><a href="vortex_link_analyzer.html" class="file-name">vortex_link_analyzer.html</a></li>
+            <li><a href="vortex_players_exfil.html" class="file-name">vortex_players_exfil.html</a></li>
+            <li><a href="vortex_postman_osint.html" class="file-name">vortex_postman_osint.html</a> <span class="desc">(API Bridge)</span></li>
+            <li><a href="vortex_target_185_136_92_16.html" class="file-name">vortex_target_185_136_92_16.html</a> <span class="desc">(Specifieke IP Target)</span></li>
+            <li><a href="vortex_target_videre10.html" class="file-name alert-file">vortex_target_videre10.html</a> <span class="desc">(Videre Blob Storage Infiltration)</span></li>
+            <li><a href="vortex_woo_brabant.html" class="file-name">vortex_woo_brabant.html</a></li>
         </ul>
         
         <div class="category-title">[ DATA CONFIGURATIE ]</div>
         <ul>
-            <li><span class="file-name">videreoutput.json</span> <span class="desc">(Database Export)</span></li>
-            <li><span class="file-name">v2n1.nic.fail</span> <span class="desc">(Systeem Configuratie)</span></li>
+            <li><a href="videreoutput.json" class="file-name" target="_blank">videreoutput.json</a> <span class="desc">(Database Export)</span></li>
+            <li><a href="v2n1.nic.fail" class="file-name" target="_blank">v2n1.nic.fail</a> <span class="desc">(Systeem Configuratie)</span></li>
         </ul>
     </div>
 
@@ -121,19 +133,19 @@
         <h2 class="dir-title"><span class="dir-icon">📁</span> SUB-DIRECTORY (/social)</h2>
         <div class="desc" style="margin-bottom: 15px; margin-left: 0;">Bevat sociaal-geoptimaliseerde varianten en back-ups van de hoofdmodules.</div>
         <ul>
-            <li><span class="file-name">social/andersomland.html</span></li>
-            <li><span class="file-name">social/andersomland1.html</span></li>
-            <li><span class="file-name">social/andersomland2.html</span></li>
-            <li><span class="file-name">social/andersomland3.html</span></li>
-            <li><span class="file-name">social/sill.html</span></li>
-            <li><span class="file-name">social/sillly.html</span></li>
-            <li><span class="file-name">social/cyberquota.html</span></li>
-            <li><span class="file-name">social/shodan_hostscan.html</span></li>
-            <li><span class="file-name">social/vortex_players_exfil.html</span></li>
-            <li><span class="file-name">social/vortex_postman_osint.html</span></li>
-            <li><span class="file-name">social/vortex_target_185_136_92_16.html</span></li>
-            <li><span class="file-name">social/vortex_target_scan_update.html</span></li>
-            <li><span class="file-name">social/vortex_target_videre10.html</span></li>
+            <li><a href="social/andersomland.html" class="file-name">social/andersomland.html</a></li>
+            <li><a href="social/andersomland1.html" class="file-name">social/andersomland1.html</a></li>
+            <li><a href="social/andersomland2.html" class="file-name">social/andersomland2.html</a></li>
+            <li><a href="social/andersomland3.html" class="file-name">social/andersomland3.html</a></li>
+            <li><a href="social/sill.html" class="file-name">social/sill.html</a></li>
+            <li><a href="social/sillly.html" class="file-name">social/sillly.html</a></li>
+            <li><a href="social/cyberquota.html" class="file-name">social/cyberquota.html</a></li>
+            <li><a href="social/shodan_hostscan.html" class="file-name">social/shodan_hostscan.html</a></li>
+            <li><a href="social/vortex_players_exfil.html" class="file-name">social/vortex_players_exfil.html</a></li>
+            <li><a href="social/vortex_postman_osint.html" class="file-name">social/vortex_postman_osint.html</a></li>
+            <li><a href="social/vortex_target_185_136_92_16.html" class="file-name">social/vortex_target_185_136_92_16.html</a></li>
+            <li><a href="social/vortex_target_scan_update.html" class="file-name">social/vortex_target_scan_update.html</a></li>
+            <li><a href="social/vortex_target_videre10.html" class="file-name">social/vortex_target_videre10.html</a></li>
         </ul>
     </div>
 
@@ -142,8 +154,8 @@
             <span class="dir-icon" style="color: var(--vortex-success);">🛡️</span> ACTIVE EVIDENCE BUFFER (UPLOADED DATA)
         </h2>
         <ul>
-            <li><span class="file-name">afbeelding.jpg</span> <span class="desc">(EXIF Locatie & Hardware Extractie - Wbout1)</span></li>
-            <li><span class="file-name">afbeelding.png</span> <span class="desc">(OCR Receipt Extractie - RebelWithout2)</span></li>
+            <li><a href="afbeelding.jpg" class="file-name" target="_blank">afbeelding.jpg</a> <span class="desc">(EXIF Locatie & Hardware Extractie)</span></li>
+            <li><a href="afbeelding.png" class="file-name" target="_blank">afbeelding.png</a> <span class="desc">(OCR Receipt Extractie)</span></li>
         </ul>
     </div>
 
