@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.6 // SYSTEM SITEMAP</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --vortex-yellow: #ffcc00;
+        }
+
+        body {
+            background-color: var(--vortex-bg); color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace; padding: 30px;
+            margin: 0; line-height: 1.6;
+        }
+
+        .header { border-bottom: 2px solid var(--vortex-cyan); padding-bottom: 10px; margin-bottom: 30px; }
+        .title { font-size: 1.8rem; color: #fff; text-shadow: 0 0 10px var(--vortex-cyan); font-weight: bold; letter-spacing: 2px;}
+        .subtitle { color: var(--vortex-yellow); font-size: 1rem; margin-top: 5px; text-transform: uppercase;}
+
+        .directory {
+            background: rgba(0,0,0,0.8); border: 1px solid var(--vortex-border); padding: 20px;
+            margin-bottom: 25px; box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
+        }
+
+        .dir-title {
+            color: #fff; font-size: 1.2rem; border-bottom: 1px dashed #333; 
+            padding-bottom: 5px; margin-top: 0; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .dir-icon { color: var(--vortex-magenta); font-size: 1.4rem; }
+
+        .category-title { color: var(--vortex-yellow); font-weight: bold; margin-top: 15px; font-size: 0.95rem; }
+
+        ul { list-style-type: none; padding-left: 20px; margin-top: 5px; }
+        li { margin-bottom: 6px; display: flex; align-items: center; }
+        li::before { content: "►"; color: var(--vortex-magenta); margin-right: 10px; font-size: 0.8rem; }
+        
+        .file-name { color: var(--vortex-cyan); text-decoration: none; transition: 0.2s;}
+        .file-name:hover { color: #fff; text-shadow: 0 0 5px var(--vortex-cyan); cursor: pointer; }
+        
+        .desc { color: #888; font-size: 0.85rem; margin-left: 10px; font-style: italic; }
+        .alert-file { color: var(--vortex-alert); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="title">VORTEX OMNI-BRIDGE // SITEMAP</div>
+        <div class="subtitle">REPOSITORY: GOIJA/VIDERE | STATUS: INDEXED</div>
+    </div>
+
+    <div class="directory">
+        <h2 class="dir-title"><span class="dir-icon">📁</span> ROOT DIRECTORY (/)</h2>
+        
+        <div class="category-title">[ KERNBESTANDEN ]</div>
+        <ul>
+            <li><span class="file-name">index.html</span> <span class="desc">(Hoofdpagina / Landing)</span></li>
+            <li><span class="file-name">README.md</span> <span class="desc">(Systeem Documentatie)</span></li>
+        </ul>
+
+        <div class="category-title">[ DOSSIERS & ONDERZOEKEN ]</div>
+        <ul>
+            <li><span class="file-name">andersomland.html</span> <span class="desc">(Hoofd Dossier)</span></li>
+            <li><span class="file-name">andersomland1.html</span></li>
+            <li><span class="file-name">andersomland2.html</span></li>
+            <li><span class="file-name">andersomland3.html</span></li>
+            <li><span class="file-name">sill.html</span> <span class="desc">(Secundair Target Dossier)</span></li>
+            <li><span class="file-name">sillly.html</span></li>
+            <li><span class="file-name">kluis.html</span> <span class="desc">(Bewijskluis / Database Interface)</span></li>
+            <li><span class="file-name">eindrapportage-module.html</span> <span class="desc">(Rapport Generator)</span></li>
+            <li><span class="file-name">judicial_submission.html</span> <span class="desc">(Juridische Export Formattering)</span></li>
+        </ul>
+
+        <div class="category-title">[ ANALYSETOOLS & SCANNERS ]</div>
+        <ul>
+            <li><span class="file-name">woo.html</span> <span class="desc">(Wet Open Overheid Toolkit)</span></li>
+            <li><span class="file-name">cyberquota.html</span></li>
+            <li><span class="file-name">shodan_hostscan.html</span> <span class="desc">(Netwerk Reconnaissance)</span></li>
+            <li><span class="file-name">shell.html</span> <span class="desc">(Web Shell Interface)</span></li>
+            <li><span class="file-name">rest.html</span> <span class="desc">(API Testing)</span></li>
+            <li><span class="file-name">ipfs.html</span> <span class="desc">(Decentralized Storage)</span></li>
+            <li><span class="file-name">ipfs_shell.html</span></li>
+        </ul>
+
+        <div class="category-title">[ VORTEX TACTISCHE MODULES ]</div>
+        <ul>
+            <li><span class="file-name">vortex_api_probe.html</span></li>
+            <li><span class="file-name">vortex_asset_explorer.html</span></li>
+            <li><span class="file-name">vortex_boxo_explorer.html</span></li>
+            <li><span class="file-name">vortex_dns_enumerator.html</span></li>
+            <li><span class="file-name">vortex_evidence_log.html</span></li>
+            <li><span class="file-name">vortex_evidence_viewer.html</span></li>
+            <li><span class="file-name">vortex_hex_viewer.html</span> <span class="desc">(Binaire Analyse)</span></li>
+            <li><span class="file-name">vortex_ipfs_recon.html</span></li>
+            <li><span class="file-name">vortex_link_analyzer.html</span></li>
+            <li><span class="file-name">vortex_players_exfil.html</span></li>
+            <li><span class="file-name">vortex_postman_osint.html</span> <span class="desc">(API Bridge)</span></li>
+            <li><span class="file-name">vortex_target_185_136_92_16.html</span> <span class="desc">(Specifieke IP Target)</span></li>
+            <li><span class="file-name alert-file">vortex_target_videre10.html</span> <span class="desc">(Videre Blob Storage Infiltration)</span></li>
+            <li><span class="file-name">vortex_woo_brabant.html</span></li>
+        </ul>
+        
+        <div class="category-title">[ DATA CONFIGURATIE ]</div>
+        <ul>
+            <li><span class="file-name">videreoutput.json</span> <span class="desc">(Database Export)</span></li>
+            <li><span class="file-name">v2n1.nic.fail</span> <span class="desc">(Systeem Configuratie)</span></li>
+        </ul>
+    </div>
+
+    <div class="directory">
+        <h2 class="dir-title"><span class="dir-icon">📁</span> SUB-DIRECTORY (/social)</h2>
+        <div class="desc" style="margin-bottom: 15px; margin-left: 0;">Bevat sociaal-geoptimaliseerde varianten en back-ups van de hoofdmodules.</div>
+        <ul>
+            <li><span class="file-name">social/andersomland.html</span></li>
+            <li><span class="file-name">social/andersomland1.html</span></li>
+            <li><span class="file-name">social/andersomland2.html</span></li>
+            <li><span class="file-name">social/andersomland3.html</span></li>
+            <li><span class="file-name">social/sill.html</span></li>
+            <li><span class="file-name">social/sillly.html</span></li>
+            <li><span class="file-name">social/cyberquota.html</span></li>
+            <li><span class="file-name">social/shodan_hostscan.html</span></li>
+            <li><span class="file-name">social/vortex_players_exfil.html</span></li>
+            <li><span class="file-name">social/vortex_postman_osint.html</span></li>
+            <li><span class="file-name">social/vortex_target_185_136_92_16.html</span></li>
+            <li><span class="file-name">social/vortex_target_scan_update.html</span></li>
+            <li><span class="file-name">social/vortex_target_videre10.html</span></li>
+        </ul>
+    </div>
+
+    <div class="directory" style="border-color: var(--vortex-success); box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.05);">
+        <h2 class="dir-title" style="color: var(--vortex-success); border-bottom-color: var(--vortex-success);">
+            <span class="dir-icon" style="color: var(--vortex-success);">🛡️</span> ACTIVE EVIDENCE BUFFER (UPLOADED DATA)
+        </h2>
+        <ul>
+            <li><span class="file-name">afbeelding.jpg</span> <span class="desc">(EXIF Locatie & Hardware Extractie - Wbout1)</span></li>
+            <li><span class="file-name">afbeelding.png</span> <span class="desc">(OCR Receipt Extractie - RebelWithout2)</span></li>
+        </ul>
+    </div>
+
+</body>
+</html>
