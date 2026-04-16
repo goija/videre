@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // XRPC API PROBE PAYLOAD</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --vortex-yellow: #ffcc00;
+        }
+
+        body {
+            background-color: var(--vortex-bg);
+            color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+        }
+
+        .header {
+            border-bottom: 2px solid var(--vortex-cyan);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .title { font-size: 1.5rem; color: #fff; text-shadow: 0 0 8px var(--vortex-cyan); font-weight: bold; }
+        .subtitle { color: var(--vortex-alert); font-size: 0.9rem; margin-top: 5px; }
+
+        .control-panel {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--vortex-border);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; color: var(--vortex-magenta); font-size: 0.8rem; margin-bottom: 5px; font-weight: bold;}
+        
+        input[type="text"] {
+            width: 100%; background: #000; border: 1px solid var(--vortex-cyan); color: #fff;
+            padding: 10px; font-family: monospace; box-sizing: border-box; outline: none;
+        }
+
+        button {
+            background: transparent; border: 1px solid var(--vortex-alert); color: var(--vortex-alert); 
+            padding: 10px 20px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase;
+            transition: 0.2s; width: 100%;
+        }
+
+        button:hover { background: var(--vortex-alert); color: #000; box-shadow: 0 0 10px rgba(255, 0, 60, 0.5); }
+
+        .terminal {
+            background: #000; border: 1px solid var(--vortex-yellow); height: 400px;
+            overflow-y: auto; padding: 15px; font-size: 0.85rem; color: #aaa;
+        }
+
+        .log-time { color: #555; margin-right: 10px; }
+        .log-err { color: var(--vortex-alert); }
+        .log-succ { color: var(--vortex-success); }
+        .log-warn { color: var(--vortex-yellow); }
+        .log-sys { color: var(--vortex-cyan); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="title">VORTEX OMNI-BRIDGE // XRPC PAYLOAD EXECUTOR</div>
+        <div class="subtitle">TARGET: agrocybe.us-west.host.bsky.network | STATUS: 403 FORBIDDEN INVESTIGATION</div>
+    </div>
+
+    <div class="control-panel">
+        <div class="input-group">
+            <label>[ AUTHENTICATION TOKEN (BEARER) ]</label>
+            <input type="text" id="auth-token" placeholder="Voer JWT Bearer token in om 403 te bypassen (laat leeg voor anonieme test)...">
+        </div>
+        <div class="input-group">
+            <label>[ XRPC ENDPOINT TARGET ]</label>
+            <input type="text" id="target-url" value="https://agrocybe.us-west.host.bsky.network/xrpc/app.bsky.ageassurance.getState?countryCode=NL&regionCode=NH">
+        </div>
+        <button onclick="executePayload()">FIRE PAYLOAD PROBE</button>
+    </div>
+
+    <div class="terminal" id="terminal">
+        <div><span class="log-time">[SYS]</span> Terminal geïnitialiseerd. Wachtend op executie...</div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+
+        function getTimestamp() {
+            const now = new Date();
+            return `[${now.toISOString().split('T')[1].slice(0, -1)}]`;
+        }
+
+        function log(msg, type = 'log-sys') {
+            const div = document.createElement('div');
+            div.innerHTML = `<span class="log-time">${getTimestamp()}</span> <span class="${type}">${msg}</span>`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        async function executePayload() {
+            const url = document.getElementById('target-url').value;
+            const token = document.getElementById('auth-token').value;
+            
+            log(`Initiating fetch payload to: ${url}`, 'log-sys');
+            
+            const headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            };
+
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+                log(`Injecting Bearer token into headers.`, 'log-warn');
+            } else {
+                log(`No token provided. Expecting 403 Forbidden.`, 'log-warn');
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: headers,
+                    mode: 'cors' // Test CORS policy
+                });
+
+                if (!response.ok) {
+                    log(`HTTP Error: ${response.status} ${response.statusText}`, 'log-err');
+                    const errorText = await response.text();
+                    log(`Server Response: ${errorText || 'No response body'}`, 'log-err');
+                } else {
+                    log(`Success: HTTP 200 OK`, 'log-succ');
+                    const data = await response.json();
+                    log(`Data: ${JSON.stringify(data)}`, 'log-succ');
+                }
+            } catch (error) {
+                log(`Network/CORS Exception: ${error.message}`, 'log-err');
+                log(`De server blokkeert mogelijk de request via CORS (Cross-Origin Resource Sharing) of de host is onbereikbaar.`, 'log-warn');
+            }
+        }
+    </script>
+</body>
+</html>
