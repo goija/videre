@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX v26.5 // GEOINT SATELLITE RECON</title>
+    <style>
+        :root {
+            --vortex-cyan: #00e5ff;
+            --vortex-magenta: #ff00ff;
+            --vortex-bg: #050505;
+            --vortex-border: rgba(0, 229, 255, 0.3);
+            --vortex-alert: #ff003c;
+            --vortex-success: #0f0;
+            --vortex-yellow: #ffcc00;
+        }
+
+        body {
+            background-color: var(--vortex-bg); color: var(--vortex-cyan);
+            font-family: 'Courier New', Courier, monospace; padding: 20px;
+        }
+
+        .header { border-bottom: 2px solid var(--vortex-yellow); padding-bottom: 10px; margin-bottom: 20px; }
+        .title { font-size: 1.5rem; color: #fff; text-shadow: 0 0 8px var(--vortex-yellow); font-weight: bold; }
+        .subtitle { color: #888; font-size: 0.9rem; margin-top: 5px; text-transform: uppercase;}
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .panel {
+            background: rgba(0,0,0,0.85); border: 1px solid var(--vortex-yellow); padding: 20px;
+            box-shadow: inset 0 0 15px rgba(255, 204, 0, 0.05);
+        }
+
+        .data-row { display: flex; justify-content: space-between; border-bottom: 1px dotted #333; padding: 8px 0; font-size: 0.9rem; }
+        .data-label { color: var(--vortex-yellow); font-weight: bold; }
+        .data-val { color: #fff; }
+        .data-crit { color: var(--vortex-alert); font-weight: bold; animation: blink 1.5s infinite; }
+
+        @keyframes blink { 0% {opacity:1;} 50% {opacity:0.3;} 100% {opacity:1;} }
+
+        .map-placeholder {
+            width: 100%; height: 250px; background: #111; border: 1px solid #333; margin-top: 15px;
+            display: flex; align-items: center; justify-content: center; color: #555; position: relative;
+            background-image: radial-gradient(circle, #222 10%, transparent 11%), radial-gradient(circle, #222 10%, transparent 11%);
+            background-size: 20px 20px; background-position: 0 0, 10px 10px;
+        }
+        
+        .crosshair {
+            position: absolute; width: 40px; height: 40px; border: 2px solid var(--vortex-alert);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        }
+        .crosshair::before, .crosshair::after {
+            content: ''; position: absolute; background: var(--vortex-alert);
+        }
+        .crosshair::before { width: 100%; height: 2px; }
+        .crosshair::after { width: 2px; height: 100%; }
+
+        button {
+            background: rgba(255, 204, 0, 0.1); border: 1px solid var(--vortex-yellow); color: var(--vortex-yellow); 
+            padding: 12px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase;
+            transition: 0.2s; width: 100%; margin-top: 20px;
+        }
+        button:hover { background: var(--vortex-yellow); color: #000; box-shadow: 0 0 10px rgba(255, 204, 0, 0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="title">VORTEX // REVERSE GEOCODING MODULE</div>
+        <div class="subtitle">TARGET: 52°22'45.12" N, 4°53'14.88" E | RESOLUTION: STREET LEVEL</div>
+    </div>
+
+    <div class="grid">
+        <div class="panel">
+            <h3 style="margin-top:0; color: #fff;">[ COÖRDINATEN VERTALING ]</h3>
+            <div class="data-row">
+                <span class="data-label">Formaat (DMS)</span>
+                <span class="data-val">52°22'45.12" N, 4°53'14.88" E</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Formaat (Decimaal)</span>
+                <span class="data-val">52.3792, 4.887466</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Land</span>
+                <span class="data-val">Nederland (NL)</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Provincie</span>
+                <span class="data-val">Noord-Holland (NH)</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Stad</span>
+                <span class="data-val">Amsterdam</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Stadsdeel</span>
+                <span class="data-val">Centrum (Binnenstad)</span>
+            </div>
+            <div class="data-row">
+                <span class="data-label">Nauwkeurigheid</span>
+                <span class="data-val data-crit">± 4.2 Meter (GPS L1/L5)</span>
+            </div>
+            
+            <button onclick="alert('Google Maps / BING API integratie lokaal vereist voor live view.')">OPEN EXTERNE KAART API</button>
+        </div>
+
+        <div class="panel">
+            <h3 style="margin-top:0; color: #fff;">[ TACTISCHE ANALYSE ]</h3>
+            <p style="font-size: 0.85rem; color: #ccc; line-height: 1.5;">
+                De geëxtraheerde GPS-coördinaten verwijzen naar het centrum van Amsterdam. De data komt fysiek overeen met het gebied rondom de <strong>Spuistraat / Singel / Nieuwezijds Voorburgwal</strong>, dichtbij het Centraal Station en de historische binnenstad.
+            </p>
+            <p style="font-size: 0.85rem; color: #ccc; line-height: 1.5;">
+                Gezien de extreme nauwkeurigheid van het signaal (iPhone 14 Pro Max gebruikt multi-band GPS) was het toestel vrijwel zeker buiten, of vlakbij een raam, toen de betreffende mediabestanden gecreëerd en/of gedistribueerd werden.
+            </p>
+            
+            <div class="map-placeholder">
+                <div class="crosshair"></div>
+                <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.7rem; color: var(--vortex-cyan);">
+                    SYS.RADAR.ACTIVE // AMS_CENTRUM
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
