@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="nl"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORTEX // OSINT Nexus</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --panel-bg: #0d1117;
+            --text-main: #33ff00; /* Terminal green */
+            --text-muted: #888888;
+            --accent: #ff0055; /* Roze/rode accenten */
+            --border: #33ff00;
+        }
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 { color: var(--accent); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .header-bar { border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(51, 255, 0, 0.1);
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--text-muted);
+            font-family: inherit;
+        }
+        input[type="text"]:focus { outline: none; border-color: var(--accent); }
+        button {
+            width: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        button:hover { background-color: var(--border); color: var(--bg-color); }
+        .btn-accent { border-color: var(--accent); color: var(--accent); }
+        .btn-accent:hover { background-color: var(--accent); color: var(--bg-color); }
+        textarea {
+            width: 100%;
+            height: 100px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--text-muted);
+            padding: 10px;
+            font-family: inherit;
+            box-sizing: border-box;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+        .status-indicator { font-size: 0.9em; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <h1>VORTEX // OSINT Nexus</h1>
+        <div class="status-indicator">SYSTEM: ONLINE | SECURE LOCAL CONTEXT</div>
+    </div>
+    
+    <div class="grid-container">
+        
+        <div class="panel">
+            <h2>1. Fediverse / Identiteit</h2>
+            <p>Analyseer gedecentraliseerde identiteiten (bijv. droplul1999@mastodon.berlin).</p>
+            <input type="text" id="fediverse-input" placeholder="user@instance.tld" value="droplul1999@mastodon.berlin">
+            <button onclick="osintQuery('fediverse', 'webfinger')">WebFinger Lookup</button>
+            <button onclick="osintQuery('fediverse', 'mastodon-search')">Zoek op Instance</button>
+        </div>
+
+        <div class="panel">
+            <h2>2. Netwerk &amp; BGP Routering</h2>
+            <p>Analyseer IP ranges (bijv. 185.136.92.0/23) en ASN's.</p>
+            <input type="text" id="ip-input" placeholder="IP Adres of CIDR Range">
+            <button onclick="osintQuery('ip', 'bgpview')" class="btn-accent">BGPView / ASN Info</button>
+            <button onclick="osintQuery('ip', 'ripe')" class="btn-accent">RIPE Database Search</button>
+            <button onclick="osintQuery('ip', 'shodan')">Shodan Host Scan</button>
+        </div>
+
+        <div class="panel" style="grid-column: 1 / -1;">
+            <h2>3. P2P Telemetrie / Comms</h2>
+            <p>Opzetten van asymmetrische datatunnel. <span id="p2p-status" style="color: var(--accent);">[OFFLINE]</span></p>
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1;">
+                    <button id="btn-create-offer">1. Genereer SDP Offer</button>
+                    <textarea id="local-sdp" placeholder="Lokale SDP string..."></textarea>
+                </div>
+                <div style="flex: 1;">
+                    <textarea id="remote-sdp" placeholder="Plak Remote SDP hier..."></textarea>
+                    <button id="btn-accept-sdp">2. Accepteer Remote SDP</button>
+                </div>
+            </div>
+            <input type="text" id="p2p-msg" placeholder="Data payload...">
+            <button id="btn-send" class="btn-accent" disabled="disabled">Verstuur Data</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- OSINT QUERIES ---
+        function osintQuery(type, tool) {
+            let query = "";
+            let url = "";
+
+            if (type === 'fediverse') {
+                query = document.getElementById('fediverse-input').value.trim();
+                if (!query || !query.includes('@')) return alert("Gebruik formaat: user@instance");
+                let parts = query.split('@');
+                let user = parts[0] || parts[1]; // handle @user@domain or user@domain
+                let domain = parts.length > 2 ? parts[2] : parts[1];
+
+                if (tool === 'webfinger') url = `https://${domain}/.well-known/webfinger?resource=acct:${user}@${domain}`;
+                if (tool === 'mastodon-search') url = `https://${domain}/@${user}`;
+            }
+
+            if (type === 'ip') {
+                query = document.getElementById('ip-input').value.trim();
+                if (!query) return alert("Voer een IP of Range in.");
+                
+                // Verwijder CIDR voor specifieke tools indien nodig
+                let ipClean = query.split('/')[0];
+
+                if (tool === 'bgpview') url = `https://bgpview.io/ip/${ipClean}`;
+                if (tool === 'ripe') url = `https://apps.db.ripe.net/db-web-ui/query?searchtext=${encodeURIComponent(query)}`;
+                if (tool === 'shodan') url = `https://www.shodan.io/host/${ipClean}`;
+            }
+
+            if (url) window.open(url, '_blank');
+        }
+
+        // --- WEBRTC TELEMETRIE ---
+        const peerConnection = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+        let dataChannel;
+
+        function setupDataChannel(channel) {
+            channel.onopen = () => {
+                document.getElementById('p2p-status').innerText = "[ONLINE]";
+                document.getElementById('p2p-status').style.color = "var(--text-main)";
+                document.getElementById('btn-send').disabled = false;
+            };
+            channel.onclose = () => {
+                document.getElementById('p2p-status').innerText = "[OFFLINE]";
+                document.getElementById('p2p-status').style.color = "var(--accent)";
+            };
+            channel.onmessage = (e) => console.log("RX:", e.data);
+        }
+
+        peerConnection.onicecandidate = (e) => {
+            if (e.candidate === null) document.getElementById('local-sdp').value = JSON.stringify(peerConnection.localDescription);
+        };
+
+        peerConnection.ondatachannel = (e) => {
+            dataChannel = e.channel;
+            setupDataChannel(dataChannel);
+        };
+
+        document.getElementById('btn-create-offer').onclick = async () => {
+            dataChannel = peerConnection.createDataChannel('vortex-telemetry');
+            setupDataChannel(dataChannel);
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+        };
+
+        document.getElementById('btn-accept-sdp').onclick = async () => {
+            const remoteSdp = JSON.parse(document.getElementById('remote-sdp').value);
+            await peerConnection.setRemoteDescription(remoteSdp);
+            if (remoteSdp.type === 'offer') {
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+                document.getElementById('local-sdp').value = JSON.stringify(peerConnection.localDescription);
+            }
+        };
+
+        document.getElementById('btn-send').onclick = () => {
+            const msg = document.getElementById('p2p-msg').value;
+            if (dataChannel && dataChannel.readyState === 'open') dataChannel.send(msg);
+        };
+    </script>
+
+</body></html>
