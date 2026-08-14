@@ -1,338 +1,44 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en" dir="ltr" data-app-env="prod" data-app-version="dcbebaa53a13af19356c6ed5775c14e771e9decc">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VORTEX - Target Analysis: @Videre10</title>
-    <style>
-        :root {
-            --bg-base: #0d1117;
-            --bg-panel: #161b22;
-            --text-main: #c9d1d9;
-            --text-muted: #8b949e;
-            --accent-blue: #58a6ff;
-            --accent-green: #3fb950;
-            --border-color: #30363d;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .header {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            color: var(--accent-blue);
-            font-family: monospace;
-        }
-
-        .status {
-            color: var(--accent-green);
-            font-family: monospace;
-            font-size: 14px;
-        }
-
-        .profile-card {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 20px;
-        }
-
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            background-color: #21262d;
-            border-radius: 50%;
-            border: 2px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-        }
-
-        .profile-info h2 {
-            margin: 0 0 5px 0;
-            font-size: 22px;
-        }
-
-        .profile-info .handle {
-            color: var(--text-muted);
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .profile-info .bio {
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .stats {
-            display: flex;
-            gap: 20px;
-        }
-
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .stat-value {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .section-title {
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
-        }
-
-        .tweet-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .tweet {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .tweet-text {
-            font-size: 15px;
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .tweet-metrics {
-            display: flex;
-            gap: 20px;
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        .metric {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .raw-log-btn {
-            background-color: #21262d;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: monospace;
-            margin-top: 20px;
-            transition: 0.2s;
-        }
-
-        .raw-log-btn:hover {
-            background-color: #30363d;
-        }
-
-        .terminal {
-            display: none;
-            background-color: #000;
-            color: #3fb950;
-            font-family: monospace;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 10px;
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-            font-size: 12px;
-        }
-    </style>
+    <meta charSet="utf-8" nonce="3QZk3AmtglkVxOInBRTx/Q=="/>
+    <title>Videre Collectief (@Videre10) / X</title>
+    
+    <!-- Profile Metadata -->
+    <meta property="og:title" content="Videre Collectief (@Videre10) on X"/>
+    <meta name="description" content="Mᴀɪʟ: VɪᴅᴇʀᴇCᴏʟʟᴇᴄᴛɪᴇғ@ᴘʀᴏᴛᴏɴ.ᴍᴇ"/>
+    <meta property="profile:username" content="Videre10"/>
+    <meta name="twitter:label1" content="Posts"/>
+    <meta name="twitter:data1" content="50.8K"/>
+    <meta name="twitter:label2" content="Joined"/>
+    <meta name="twitter:data2" content="August 2020"/>
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/2048875641106489344/ijHmvvki_200x200.png"/>
+    <meta name="twitter:image" content="https://pbs.twimg.com/profile_banners/1295801138567098368/1767337000"/>
 </head>
 <body>
-
-    <div class="container">
-        <div class="header">
-            <h1>[SYS] VORTEX / Target_Extract</h1>
-            <div class="status">● HTTP 200 OK | Data Geëxtraheerd</div>
-        </div>
-
-        <!-- Profiel Informatie Sectie -->
-        <div class="profile-card">
-            <div class="profile-avatar">🕵️</div>
-            <div class="profile-info">
-                <h2 id="profileName">Laden...</h2>
-                <div class="handle" id="profileHandle">@laden...</div>
-                <div class="bio" id="profileBio">Biografie wordt geladen...</div>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <span class="stat-value" id="statFollowers">-</span>
-                        <span class="stat-label">Volgers</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value" id="statFollowing">-</span>
-                        <span class="stat-label">Volgend</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value" id="statTweets">-</span>
-                        <span class="stat-label">Posts</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-value" id="statJoined">-</span>
-                        <span class="stat-label">Lid Sinds</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-title">Geëxtraheerde Posts (Laatste Activiteit)</div>
+    <!-- Schema.org Microdata Extraction -->
+    <div itemProp="mainEntity" itemScope="" itemType="https://schema.org/Person">
+        <meta itemProp="identifier" content="1295801138567098368"/>
+        <meta itemProp="name" content="Videre Collectief"/>
+        <meta itemProp="alternateName" content="Videre10"/>
+        <meta itemProp="description" content="Mᴀɪʟ: VɪᴅᴇʀᴇCᴏʟʟᴇᴄᴛɪᴇғ@ᴘʀᴏᴛᴏɴ.ᴍᴇ"/>
         
-        <!-- Tweets Sectie -->
-        <div class="tweet-list" id="tweetContainer">
-            <!-- Wordt gevuld via JavaScript -->
+        <!-- Interaction Counters -->
+        <div hidden="" itemProp="agentInteractionStatistic" itemScope="" itemType="https://schema.org/InteractionCounter">
+            <meta itemProp="interactionType" content="https://schema.org/WriteAction"/>
+            <meta itemProp="name" content="Tweets"/>
+            <meta itemProp="userInteractionCount" content="50753"/>
         </div>
-
-        <button class="raw-log-btn" onclick="toggleLogs()">[+] Bekijk Raw HTTP Headers</button>
-        
-        <div class="terminal" id="rawLog">
-> GET /videre10
-> Host: x.com
-> authorization: Bearer AAAAA... [REDACTED]
-> x-twitter-active-user: yes
-> user-agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:149.0)
-
-< 200 OK
-< Date: 2026-08-14T13:13:01.000Z
-< cf-cache-status: DYNAMIC
-< server: cloudflare envoy
+        <div hidden="" itemProp="agentInteractionStatistic" itemScope="" itemType="https://schema.org/InteractionCounter">
+            <meta itemProp="interactionType" content="https://schema.org/FollowAction"/>
+            <meta itemProp="name" content="Following"/>
+            <meta itemProp="userInteractionCount" content="1410"/>
+        </div>
+        <div hidden="" itemProp="interactionStatistic" itemScope="" itemType="https://schema.org/InteractionCounter">
+            <meta itemProp="interactionType" content="https://schema.org/FollowAction"/>
+            <meta itemProp="name" content="Follows"/>
+            <meta itemProp="userInteractionCount" content="5161"/>
         </div>
     </div>
-
-    <script>
-        // Data geëxtraheerd uit de rauwe HTTP/HTML dump
-        const scrapedData = {
-            profile: {
-                name: "Videre Collectief",
-                handle: "@Videre10",
-                bio: "Mᴀɪʟ: VɪᴅᴇʀᴇCᴏʟʟᴇᴄᴛɪᴇғ@ᴘʀᴏᴛᴏɴ.ᴍᴇ\nLink: videre.fail",
-                followers: "5,161",
-                following: "1,410",
-                tweets: "50.8K",
-                joined: "Augustus 2020"
-            },
-            posts: [
-                {
-                    text: "Video Vaagland! https://t.co/rl2IEJFoiy",
-                    time: "1h geleden",
-                    views: 135,
-                    likes: 3,
-                    retweets: 2,
-                    replies: 1
-                },
-                {
-                    text: "Donatiezuiger Marsja heeft 30 minuten in de zon gekeken! https://t.co/cEhZMcExoI",
-                    time: "1h geleden",
-                    views: 242,
-                    likes: 4,
-                    retweets: 2,
-                    replies: 3
-                },
-                {
-                    text: "Vandaag: boertjes in Den Bosch! https://t.co/91O3IKAmN6",
-                    time: "3h/4h geleden",
-                    views: 353,
-                    likes: 6,
-                    retweets: 4,
-                    replies: 3
-                },
-                {
-                    text: "Wie wa wappie Gerard: “De natuur is verschrikkelijk!” https://t.co/VGq597Ynbp",
-                    time: "20h geleden",
-                    views: 555,
-                    likes: 8,
-                    retweets: 4,
-                    replies: 1
-                }
-            ]
-        };
-
-        // Functie om de DOM te vullen met de geëxtraheerde data
-        function renderDashboard() {
-            // Vul profiel details in
-            document.getElementById('profileName').textContent = scrapedData.profile.name;
-            document.getElementById('profileHandle').textContent = scrapedData.profile.handle;
-            document.getElementById('profileBio').innerText = scrapedData.profile.bio;
-            document.getElementById('statFollowers').textContent = scrapedData.profile.followers;
-            document.getElementById('statFollowing').textContent = scrapedData.profile.following;
-            document.getElementById('statTweets').textContent = scrapedData.profile.tweets;
-            document.getElementById('statJoined').textContent = scrapedData.profile.joined;
-
-            // Render de tweets
-            const tweetContainer = document.getElementById('tweetContainer');
-            
-            scrapedData.posts.forEach(post => {
-                const tweetEl = document.createElement('div');
-                tweetEl.className = 'tweet';
-                
-                tweetEl.innerHTML = `
-                    <div style="color: var(--text-muted); font-size: 12px; margin-bottom: 8px;">🕒 ${post.time}</div>
-                    <div class="tweet-text">${post.text}</div>
-                    <div class="tweet-metrics">
-                        <div class="metric">👁️ ${post.views}</div>
-                        <div class="metric">💬 ${post.replies}</div>
-                        <div class="metric">🔁 ${post.retweets}</div>
-                        <div class="metric">❤️ ${post.likes}</div>
-                    </div>
-                `;
-                tweetContainer.appendChild(tweetEl);
-            });
-        }
-
-        // Functie om de ruwe logs te tonen/verbergen
-        function toggleLogs() {
-            const logBox = document.getElementById('rawLog');
-            if (logBox.style.display === "block") {
-                logBox.style.display = "none";
-            } else {
-                logBox.style.display = "block";
-            }
-        }
-
-        // Start render bij het laden van de pagina
-        window.onload = renderDashboard;
-    </script>
 </body>
 </html>
