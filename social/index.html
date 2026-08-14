@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bestandsbeheer - Repository</title>
+    <title>VORTEX / Index - Repository</title>
     <style>
         :root {
             --bg-color: #0d1117;
@@ -92,6 +92,7 @@
         .file-name {
             color: var(--text-primary);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .file-name:hover {
@@ -133,7 +134,7 @@
     </div>
 
     <script>
-        // Dataset op basis van de aangeleverde structuur (met geneutraliseerde namen)
+        // De originele dataset met de exacte bestandsnamen
         const fileData = [
             { name: "andersomland.html", message: "Add files via upload", time: "4 months ago" },
             { name: "andersomland1.html", message: "Add files via upload", time: "4 months ago" },
@@ -141,14 +142,14 @@
             { name: "andersomland3.html", message: "Add files via upload", time: "4 months ago" },
             { name: "cyberquota.html", message: "Add files via upload", time: "4 months ago" },
             { name: "index.html", message: "Create index.html", time: "1 minute ago" },
-            { name: "network_host_discovery.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "shodan_hostscan.html", message: "Add files via upload", time: "4 months ago" },
             { name: "sill.html", message: "Add files via upload", time: "4 months ago" },
             { name: "sillly.html", message: "Add files via upload", time: "4 months ago" },
-            { name: "vortex_players_export.html", message: "Add files via upload", time: "4 months ago" },
-            { name: "vortex_postman_metrics.html", message: "Add files via upload", time: "4 months ago" },
-            { name: "vortex_node_192_168_1_1.html", message: "Add files via upload", time: "4 months ago" },
-            { name: "vortex_node_status_update.html", message: "Add files via upload", time: "4 months ago" },
-            { name: "vortex_node_videre10.html", message: "Add files via upload", time: "4 months ago" }
+            { name: "vortex_players_exfil.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_postman_osint.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_target_185_136_92_16.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_target_scan_update.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_target_videre10.html", message: "Add files via upload", time: "4 months ago" }
         ];
 
         const fileListElement = document.getElementById('fileList');
@@ -166,10 +167,11 @@
             files.forEach(file => {
                 const row = document.createElement('tr');
                 
+                // Hier is de 'href' aangepast zodat de links daadwerkelijk werken!
                 row.innerHTML = `
                     <td>
                         <span class="file-icon">📄</span>
-                        <a href="#" class="file-name">${file.name}</a>
+                        <a href="${file.name}" class="file-name">${file.name}</a>
                     </td>
                     <td class="commit-message">${file.message}</td>
                     <td class="timestamp">${file.time}</td>
@@ -179,7 +181,7 @@
             });
         }
 
-        // Event listener voor de zoekfunctionaliteit
+        // Event listener voor de zoekfunctionaliteit (filtert live tijdens het typen)
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             const filteredFiles = fileData.filter(file => 
@@ -189,7 +191,7 @@
             renderFiles(filteredFiles);
         });
 
-        // Initiele render
+        // Initiele render van de tabel
         renderFiles(fileData);
     </script>
 
