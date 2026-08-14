@@ -3,182 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index - Digitaal Portaal</title>
-    <meta name="description" content="Centrale indexpagina voor digitale archieven en projectdocumentatie.">
-    
+    <title>Bestandsbeheer - Repository</title>
     <style>
         :root {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --accent-color: #60a3d9;
-            --border-color: #333333;
-            --card-bg: #1e1e1e;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --bg-color: #0d1117;
+            --container-bg: #161b22;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --link-color: #58a6ff;
+            --row-hover: #1f2428;
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            margin: 0;
             padding: 2rem;
-            text-align: center;
-        }
-
-        header h1 {
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        nav {
-            background-color: #1a1a1a;
-            padding: 1rem;
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            border-bottom: 1px solid var(--border-color);
         }
 
-        nav a {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        nav a:hover {
-            color: var(--accent-color);
-        }
-
-        main {
-            flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+        .repository-container {
             width: 100%;
+            max-width: 900px;
         }
 
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .card h2 {
-            color: var(--accent-color);
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1rem;
-            font-size: 1.25rem;
+        }
+
+        .search-box {
+            padding: 8px 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            width: 250px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--link-color);
+        }
+
+        .file-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .file-table th {
+            text-align: left;
+            padding: 12px 16px;
+            background-color: #161b22;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
         }
 
-        .card ul {
-            list-style-type: none;
+        .file-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
         }
 
-        .card ul li {
-            margin-bottom: 0.5rem;
+        .file-table tr:last-child td {
+            border-bottom: none;
         }
 
-        .card ul li a {
-            color: var(--text-color);
+        .file-table tbody tr:hover {
+            background-color: var(--row-hover);
+        }
+
+        .file-icon {
+            margin-right: 10px;
+            color: var(--text-secondary);
+        }
+
+        .file-name {
+            color: var(--text-primary);
             text-decoration: none;
         }
 
-        .card ul li a:hover {
+        .file-name:hover {
+            color: var(--link-color);
             text-decoration: underline;
-            color: var(--accent-color);
         }
 
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            background-color: var(--card-bg);
-            border-top: 1px solid var(--border-color);
-            font-size: 0.875rem;
-            color: #888;
+        .commit-message {
+            color: var(--text-secondary);
+        }
+
+        .timestamp {
+            color: var(--text-secondary);
+            text-align: right;
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Systeem Index</h1>
-        <p>Centraal overzicht van datastructuren, media en archiefbestanden</p>
-    </header>
+    <div class="repository-container">
+        <div class="header-controls">
+            <h2>VORTEX / Index</h2>
+            <input type="text" id="searchInput" class="search-box" placeholder="Zoek bestanden...">
+        </div>
 
-    <nav>
-        <a href="#archief">Historisch Archief</a>
-        <a href="#techniek">Systeemarchitectuur</a>
-        <a href="#media">Media & API's</a>
-    </nav>
+        <table class="file-table">
+            <thead>
+                <tr>
+                    <th>Bestandsnaam</th>
+                    <th>Laatste wijziging</th>
+                    <th style="text-align: right;">Tijd</th>
+                </tr>
+            </thead>
+            <tbody id="fileList">
+                <!-- Data wordt hier dynamisch ingeladen via JavaScript -->
+            </tbody>
+        </table>
+    </div>
 
-    <main>
-        <!-- Sectie 1: Dossiers en Archieven -->
-        <section class="card" id="archief">
-            <h2>Dossiers & Archief</h2>
-            <p>Toegang tot regionale historische data, milieudossiers en WOO-verzoeken.</p>
-            <br>
-            <ul>
-                <li><a href="/dossiers/milieu/">📁 Milieudossiers (Actueel)</a></li>
-                <li><a href="/dossiers/historie/">📁 Regionale Historische Data</a></li>
-                <li><a href="/dossiers/woo/">📁 Publieke Verzoeken (WOO)</a></li>
-                <li><a href="/index_logs.html">📄 Systeemlogs & Notities</a></li>
-            </ul>
-        </section>
+    <script>
+        // Dataset op basis van de aangeleverde structuur (met geneutraliseerde namen)
+        const fileData = [
+            { name: "andersomland.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "andersomland1.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "andersomland2.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "andersomland3.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "cyberquota.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "index.html", message: "Create index.html", time: "1 minute ago" },
+            { name: "network_host_discovery.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "sill.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "sillly.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_players_export.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_postman_metrics.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_node_192_168_1_1.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_node_status_update.html", message: "Add files via upload", time: "4 months ago" },
+            { name: "vortex_node_videre10.html", message: "Add files via upload", time: "4 months ago" }
+        ];
 
-        <!-- Sectie 2: Systeem & Architectuur -->
-        <section class="card" id="techniek">
-            <h2>Project VORTEX & Netwerk</h2>
-            <p>Documentatie voor low-level systeemarchitectuur, discrete wiskunde modellen en WebRTC.</p>
-            <br>
-            <ul>
-                <li><a href="/vortex/docs/">💻 VORTEX Data Engine Docs</a></li>
-                <li><a href="/network/webrtc/">🔌 WebRTC Datakanalen</a></li>
-                <li><a href="/math/discrete/">📐 Wiskundige Modellen</a></li>
-                <li><a href="/servers/matrix/">🌐 Gedecentraliseerde Nodes</a></li>
-            </ul>
-        </section>
+        const fileListElement = document.getElementById('fileList');
+        const searchInput = document.getElementById('searchInput');
 
-        <!-- Sectie 3: Media & Automatisering -->
-        <section class="card" id="media">
-            <h2>Media & Automatisering</h2>
-            <p>Overzicht van geautomatiseerde workflows en grafische composities.</p>
-            <br>
-            <ul>
-                <li><a href="/media/workflows/">⚙️ FFMPEG Geautomatiseerde Scripts</a></li>
-                <li><a href="/media/art/">🎨 Visuele Composities & Rendering</a></li>
-                <li><a href="/api/endpoints/">🔗 API Endpoints</a></li>
-            </ul>
-        </section>
-    </main>
+        // Functie om de tabel te renderen
+        function renderFiles(files) {
+            fileListElement.innerHTML = ''; // Maak tabel leeg
 
-    <footer>
-        <p>&copy; 2026 Lokale Node. Draait via open-source standaarden.</p>
-    </footer>
+            if (files.length === 0) {
+                fileListElement.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #8b949e;">Geen bestanden gevonden</td></tr>`;
+                return;
+            }
+
+            files.forEach(file => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>
+                        <span class="file-icon">📄</span>
+                        <a href="#" class="file-name">${file.name}</a>
+                    </td>
+                    <td class="commit-message">${file.message}</td>
+                    <td class="timestamp">${file.time}</td>
+                `;
+                
+                fileListElement.appendChild(row);
+            });
+        }
+
+        // Event listener voor de zoekfunctionaliteit
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredFiles = fileData.filter(file => 
+                file.name.toLowerCase().includes(searchTerm) || 
+                file.message.toLowerCase().includes(searchTerm)
+            );
+            renderFiles(filteredFiles);
+        });
+
+        // Initiele render
+        renderFiles(fileData);
+    </script>
 
 </body>
 </html>
