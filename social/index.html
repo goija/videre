@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index - Digitaal Portaal</title>
+    <meta name="description" content="Centrale indexpagina voor digitale archieven en projectdocumentatie.">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-color: #60a3d9;
+            --border-color: #333333;
+            --card-bg: #1e1e1e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        nav {
+            background-color: #1a1a1a;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .card ul {
+            list-style-type: none;
+        }
+
+        .card ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .card ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .card ul li a:hover {
+            text-decoration: underline;
+            color: var(--accent-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.875rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Systeem Index</h1>
+        <p>Centraal overzicht van datastructuren, media en archiefbestanden</p>
+    </header>
+
+    <nav>
+        <a href="#archief">Historisch Archief</a>
+        <a href="#techniek">Systeemarchitectuur</a>
+        <a href="#media">Media & API's</a>
+    </nav>
+
+    <main>
+        <!-- Sectie 1: Dossiers en Archieven -->
+        <section class="card" id="archief">
+            <h2>Dossiers & Archief</h2>
+            <p>Toegang tot regionale historische data, milieudossiers en WOO-verzoeken.</p>
+            <br>
+            <ul>
+                <li><a href="/dossiers/milieu/">📁 Milieudossiers (Actueel)</a></li>
+                <li><a href="/dossiers/historie/">📁 Regionale Historische Data</a></li>
+                <li><a href="/dossiers/woo/">📁 Publieke Verzoeken (WOO)</a></li>
+                <li><a href="/index_logs.html">📄 Systeemlogs & Notities</a></li>
+            </ul>
+        </section>
+
+        <!-- Sectie 2: Systeem & Architectuur -->
+        <section class="card" id="techniek">
+            <h2>Project VORTEX & Netwerk</h2>
+            <p>Documentatie voor low-level systeemarchitectuur, discrete wiskunde modellen en WebRTC.</p>
+            <br>
+            <ul>
+                <li><a href="/vortex/docs/">💻 VORTEX Data Engine Docs</a></li>
+                <li><a href="/network/webrtc/">🔌 WebRTC Datakanalen</a></li>
+                <li><a href="/math/discrete/">📐 Wiskundige Modellen</a></li>
+                <li><a href="/servers/matrix/">🌐 Gedecentraliseerde Nodes</a></li>
+            </ul>
+        </section>
+
+        <!-- Sectie 3: Media & Automatisering -->
+        <section class="card" id="media">
+            <h2>Media & Automatisering</h2>
+            <p>Overzicht van geautomatiseerde workflows en grafische composities.</p>
+            <br>
+            <ul>
+                <li><a href="/media/workflows/">⚙️ FFMPEG Geautomatiseerde Scripts</a></li>
+                <li><a href="/media/art/">🎨 Visuele Composities & Rendering</a></li>
+                <li><a href="/api/endpoints/">🔗 API Endpoints</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Lokale Node. Draait via open-source standaarden.</p>
+    </footer>
+
+</body>
+</html>
